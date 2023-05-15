@@ -1,11 +1,12 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import GameCard from '../components/GameCard';
-import { MdChevronLeft,MdChevronRight,Mdchevronright} from 'react-icons/md';
+import { AiOutlineRight} from 'react-icons/ai';
+import { Link } from 'react-router-dom';
 
 export const Home = () => {
   const gameData = useSelector((state) => state.game.gameList)
-  const newGameList = gameData
+  const newGameList = gameData.slice(0, 10)
   console.log(newGameList)
   const ps5gameList = gameData.filter(game => game.platform === 'ps5')
   console.log(ps5gameList)
@@ -20,7 +21,13 @@ export const Home = () => {
         </div>
         
       </div>
-      <p className='px-2 py-2 text-xl md:text-2xl font-bold'>What's new<br></br></p>
+      <div className='flex justify-between items-center'>
+        <p className='px-2 py-2 text-xl md:text-2xl font-bold'>What's new<br></br></p>
+        <Link to={"Whatsnew"} className='flex'>
+          <p className='text-xl'>More</p>
+          <AiOutlineRight className='mt-2'/>
+        </Link> 
+      </div>
       <div className='flex gap-3'>
         <div className='gap-8 flex scrollbar-hide overflow-scroll'>
           {
@@ -37,7 +44,13 @@ export const Home = () => {
           }
         </div>
       </div>
-      <p className='px-2 py-2 text-xl md:text-2xl font-bold'>PS5 Games</p>
+      <div className='flex justify-between items-center'>
+        <p className='px-2 py-2 text-xl md:text-2xl font-bold'>PS5 Games<br></br></p>
+        <Link to={"Ps5"} className='flex'>
+          <p className='text-xl'>More</p>
+          <AiOutlineRight className='mt-2'/>
+        </Link> 
+      </div>
       <div className='flex gap-3'>
         <div className='gap-8 flex scrollbar-hide overflow-scroll'>
           {
@@ -54,7 +67,13 @@ export const Home = () => {
           }
         </div>
       </div>
-      <p className='px-2 py-2 text-xl md:text-2xl font-bold'>PS4 Games</p>
+      <div className='flex justify-between items-center'>
+        <p className='px-2 py-2 text-xl md:text-2xl font-bold'>PS4 Games<br></br></p>
+        <Link to={"Ps4"} className='flex'>
+          <p className='text-xl'>More</p>
+          <AiOutlineRight className='mt-2'/>
+        </Link> 
+      </div>
       <div className='flex gap-3'>
         <div className='gap-8 flex scrollbar-hide overflow-scroll'>
           {

@@ -11,6 +11,7 @@ import Whatsnew from './page/Whatsnew';
 import Signin from './page/Signin';
 import Signup from './page/Signup';
 import Addgame from './page/Addgame';
+import Profile from './page/Profile';
 import { Store } from './redux/Store';
 import { Provider } from 'react-redux';
 
@@ -24,6 +25,7 @@ const router = createBrowserRouter(
       <Route path="Signin" element={<Signin />} />
       <Route path="Signup" element={<Signup />} />
       <Route path="Addgame" element={<Addgame />} />
+      <Route path="Profile" element={<Profile />} />
     </Route>
   )
 );

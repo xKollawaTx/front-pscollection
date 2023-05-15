@@ -1,8 +1,13 @@
 import React from 'react'
+import { Link } from 'react-router-dom';
+import { BiFilter } from 'react-icons/bi';
 
 export const Ps4 = () => {
   return (
-    <div>Ps4</div>
+    <div className='px-8 py-5 flex justify-between items-center'>
+        <p className='text-2xl md:text-2xl font-bold'>PS4 Games<br></br></p>
+          <BiFilter size={50} className=''/>
+    </div>
   )
 }
 export default Ps4;
