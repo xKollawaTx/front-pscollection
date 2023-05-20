@@ -3,85 +3,84 @@ import { BiCloudUpload } from "react-icons/bi";
 import { ImagetoBase64 } from "../utils/ImagetoBase64";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
-import { newDate } from "react";
 
 const Addgame = () => {
-    const [data, setData] = useState({
-        image: "",
-        name: "",
-        platform: "",
-        gener: "",
-        rating: "",
-        publisher: "",
-        dateAdded: new Date(),
-    })
-    
-    const handleOnChange = (e) => {
-        const { name, value } = e.target;
-        setData((preve) => {
-            return {
-                ...preve,
-                [name]: value,
-            }
-        })
-    }
+  const [data, setData] = useState({
+    image: "",
+    name: "",
+    platform: "",
+    gener: "",
+    rating: "",
+    publisher: "",
+    dateAdded: new Date(),
+  })
 
-    const uploadImage = async (e) =>{
-        const data = await ImagetoBase64(e.target.files[0]);
-        // console.log(data);
-        setData((preve) => {
-            return {
-                ...preve,
-                image: data,
-            }
-        })
-
-    }
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        console.log(data);
-      
-        const { image, name, platform, gener, rating, publisher } = data;
-      
-        if (image && name && platform && gener && rating && publisher) {
-          
-          setData((preve) => ({
-            ...preve,
-            dateAdded: new Date(),
-          }))
-
-          const fetchData = await fetch(`${process.env.REACT_APP_SERVER_URL}/addgame`, {
-              method: "POST",
-              headers: {
-                "content-type": "application/json",
-              },
-              body: JSON.stringify(data),
-            })
-      
-            const fetchDataRes = await fetchData.json();
-
-            console.log(fetchDataRes);
-            toast(fetchDataRes.message)
-
-            setData(() => {
-                return {
-                    image: "",
-                    name: "",
-                    platform: "",
-                    gener: "",
-                    rating: "",
-                    publisher: "",
-                    dateAdded: new Date(),
-                }
-            })
-            console.log(setData);
-          }
-        else {
-          toast.error("Please fill all the fields");
-        }
+  const handleOnChange = (e) => {
+    const { name, value } = e.target;
+    setData((preve) => {
+      return {
+        ...preve,
+        [name]: value,
       }
-      
+    })
+  }
+
+  const uploadImage = async (e) => {
+    const data = await ImagetoBase64(e.target.files[0]);
+    // console.log(data);
+    setData((preve) => {
+      return {
+        ...preve,
+        image: data,
+      }
+    })
+
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log(data);
+
+    const { image, name, platform, gener, rating, publisher } = data;
+
+    if (image && name && platform && gener && rating && publisher) {
+
+      setData((preve) => ({
+        ...preve,
+        dateAdded: new Date(),
+      }))
+
+      const fetchData = await fetch(`${process.env.REACT_APP_SERVER_URL}/addgame`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(data),
+      })
+
+      const fetchDataRes = await fetchData.json();
+
+      console.log(fetchDataRes);
+      toast(fetchDataRes.message)
+
+      setData(() => {
+        return {
+          image: "",
+          name: "",
+          platform: "",
+          gener: "",
+          rating: "",
+          publisher: "",
+          dateAdded: new Date(),
+        }
+      })
+      console.log(setData);
+    }
+    else {
+      toast.error("Please fill all the fields");
+    }
+  }
+
 
 
   return (
@@ -91,11 +90,11 @@ const Addgame = () => {
         <label htmlFor="image">
           <div className="h-40 w-[350px] bg-slate-200 rounded flex items-center justify-center cursor-pointer">
             {
-                data.image ? <img src={data.image} className="h-full"/> : <span className="text-6xl text-black"><BiCloudUpload /></span>
+              data.image ? <img src={data.image} className="h-full" /> : <span className="text-6xl text-black"><BiCloudUpload /></span>
             }
-            <input type={"file"} accept="image/*" id="image" onChange={uploadImage} className="hidden"/>
+            <input type={"file"} accept="image/*" id="image" onChange={uploadImage} className="hidden" />
           </div>
-          
+
         </label>
       </div>
       <div className="max-w-[500px] min-w-[350px] mt-4 border-solid border-2 border-black bg-eighth">
@@ -128,7 +127,7 @@ const Addgame = () => {
           </label>
           <hr className="mb-3"></hr>
           <div className=" w-full mb-2 px-1 py-1 bg-fourth text-black rounded focus-within:outline focus-within:outline-primary">
-            <select className="bg-fourth text-black w-full rounded"  name='gener'onChange={handleOnChange} value={data.gener}>
+            <select className="bg-fourth text-black w-full rounded" name='gener' onChange={handleOnChange} value={data.gener}>
               <option selected>Choose Gener</option>
               <option value="Action">Action</option>
               <option value="Adventure">Adventure</option>

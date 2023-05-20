@@ -82,7 +82,7 @@ const Header = () => {
                   userData.username && <Link to={"Profile"} className="hover:text-blue-300 py-3 px-3">Your account<br></br></Link>
                 }
                 {
-                  userData.email === process.env.REACT_APP_ADMIN_EMAIL && <Link to={"Addgame"} className="hover:text-blue-300 py-3 px-3 mb-2">Admin panel<br></br></Link>
+                  userData.email === process.env.REACT_APP_ADMIN_EMAIL && <Link to={"Admin"} className="hover:text-blue-300 py-3 px-3 mb-2">Admin panel<br></br></Link>
                 }
                 {
                   userData.username && <Link to={"Request"} className="hover:text-blue-300 py-3 px-3">Request<br></br></Link>

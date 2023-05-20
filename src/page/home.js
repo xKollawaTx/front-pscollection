@@ -29,7 +29,7 @@ export const Home = () => {
         </Link> 
       </div>
       <div className='flex gap-3'>
-        <div className='gap-8 flex scrollbar-hide overflow-scroll'>
+        <div className='gap-1 flex scrollbar-hide overflow-scroll'>
           {
             newGameList.map(game => {
               return (
@@ -52,7 +52,7 @@ export const Home = () => {
         </Link> 
       </div>
       <div className='flex gap-3'>
-        <div className='gap-8 flex scrollbar-hide overflow-scroll'>
+        <div className='gap-1 flex scrollbar-hide overflow-scroll'>
           {
             ps5gameList.map(game => {
               return (
@@ -75,7 +75,7 @@ export const Home = () => {
         </Link> 
       </div>
       <div className='flex gap-3'>
-        <div className='gap-8 flex scrollbar-hide overflow-scroll'>
+        <div className='gap-1 flex scrollbar-hide overflow-scroll'>
           {
             ps4gameList.map(game => {
               return (

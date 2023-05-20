@@ -15,11 +15,13 @@ module.exports = {
         "seventh": "#B9BBBA",
         "eighth": "#262727",
         "ninth": "#97B3DD",
+        "tenth": "#B9BBBA",
+        "eleventh": "#474747",
+      },
     },
-  },
-  plugins: [
-    require('tailwind-scrollbar-hide')
-  ],
-}
+    plugins: [
+      require('tailwind-scrollbar-hide')
+    ],
+  }
 }
 

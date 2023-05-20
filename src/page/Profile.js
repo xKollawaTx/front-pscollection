@@ -2,9 +2,15 @@ import React from 'react';
 import profileimg from "../asset/profileimg.png";
 import { useSelector, useDispatch } from "react-redux";
 import { MdEditNote } from "react-icons/md";
+import { useState } from "react";
+import Editprofile from "../components/Editprofile";
 
 const Profile = () => {
+    const [isEditing, setIsEditing] = useState(false);
     const userData = useSelector((state) => state.user);
+    const handleEditAccount = () => {
+        setIsEditing(prev => !prev);
+    };
 
     return (
         <div className="p-3 md:p-4 text-white">
@@ -23,9 +29,14 @@ const Profile = () => {
                     <p className="text-xl underline">{userData.email}</p>
                 </div>
             </div>
-            <div className='m-auto mt-1 flex flex-col items-center'>
+            <div className='m-auto mt-1 flex flex-col items-center' onClick={handleEditAccount}>
                 <p className='text-primary underline'>Edit Account</p>
             </div>
+            {isEditing && (
+                <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
+                    <Editprofile />
+                </div>
+            )}
             <div>
                 <button className="w-full mt-10 flex flex-row max-w-[200px] m-auto  bg-sixth hover:bg-primary cursor-pointer  text-black text-xl font-bold py-1 rounded-full">
                 <p className='ml-5 mr-1'>My Collection</p><MdEditNote size={30}/>
