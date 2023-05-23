@@ -1,6 +1,7 @@
 import React from 'react'
+import { Link } from 'react-router-dom';
 
-const GameCard = ({ image, name }) => {
+const GameCard = ({ image, name, _id }) => {
   return (
     <div className="w-full min-w-[150px] max-w-[150px]  md:min-w-[300px] md:max-w-[320px] hover:shadow-lg drop-shadow-lg py-5 px-4 cursor-pointer flex flex-col">
       <div className="h-40 sm:h-60 md:h-80 lg:h-96 overflow-hidden">

@@ -99,7 +99,7 @@ const Addgame = () => {
       </div>
       <div className="max-w-[500px] min-w-[350px] mt-4 border-solid border-2 border-black bg-eighth">
         <form className="m-auto py-4 max-w-[400px] flex flex-col placeholder-fifth" onSubmit={handleSubmit} >
-          <label htmlFor="email">Game name</label>
+          <label htmlFor="gamename">Game name</label>
           <div className="w-full flex px-2 py-1 bg-fourth  mt-1 mb-2 rounded focus-within:outline focus-within:outline-primary">
             <input
               type={"text"}
@@ -111,7 +111,7 @@ const Addgame = () => {
               value={data.name}
             />
           </div>
-          <label className="mb-1" htmlFor="email">
+          <label className="mb-1" htmlFor="platform">
             Platform
           </label>
           <hr className="mb-3"></hr>
@@ -122,8 +122,8 @@ const Addgame = () => {
               <option value="ps4">PS4</option>
             </select>
           </div>
-          <label className="mb-1" htmlFor="email">
-            Gener
+          <label className="mb-1" htmlFor="genre">
+            Genre
           </label>
           <hr className="mb-3"></hr>
           <div className=" w-full mb-2 px-1 py-1 bg-fourth text-black rounded focus-within:outline focus-within:outline-primary">
@@ -143,7 +143,7 @@ const Addgame = () => {
               <option value="Strategy">Strategy</option>
             </select>
           </div>
-          <label className="mb-1" htmlFor="email">
+          <label className="mb-1" htmlFor="rating">
             Rating
           </label>
           <hr className="mb-3"></hr>
@@ -160,7 +160,7 @@ const Addgame = () => {
               <option value="NOT RATED">NR</option>
             </select>
           </div>
-          <label htmlFor="password">Publisher</label>
+          <label htmlFor="publisher">Publisher</label>
           <div className="w-full flex px-2 py-1 bg-fourth  mt-1 mb-2 rounded focus-within:outline focus-within:outline-primary">
             <input
               type={"text"}

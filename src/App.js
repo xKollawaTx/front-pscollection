@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setDataGame } from "./redux/gameSlide";
 
-//5.30
+
 function App() {
   const dispatch = useDispatch()
   const gameData = useSelector((state)=>state.game)

@@ -6,7 +6,7 @@ import profileimg from "../asset/profileimg.png";
 import { useSelector, useDispatch } from "react-redux";
 import { logoutRedux } from "../redux/userSlice";
 import { toast } from "react-hot-toast";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -16,16 +16,15 @@ const Header = () => {
   const dispatch = useDispatch();
 
   const handleShowMenu = () => {
-    setShowMenu(prev => !prev);
-  }
+    setShowMenu((prev) => !prev);
+  };
   const handleLogout = () => {
-    dispatch(logoutRedux())
+    dispatch(logoutRedux());
     toast.success("Sign Out Success");
     setTimeout(() => {
       navigate("/");
-    }, 1000)
-
-  }
+    }, 1000);
+  };
 
   return (
     <header className="bg-primary fixed shadow-md w-full h-16 z-50">
@@ -70,33 +69,73 @@ const Header = () => {
             </Link>
           </nav>
           <div className="text-white ml-5 mr-5">
-            <div className="text-4xl text-center cursor-pointer rounded-full w-10 h-10 overflow-hidden drop-shadow-md" onClick={handleShowMenu}>
-              {userData.image ? <img className="w-full h-full" src={userData.image} /> : <img src={profileimg} />}
+            <div
+              className="text-4xl text-center cursor-pointer rounded-full w-10 h-10 overflow-hidden drop-shadow-md"
+              onClick={handleShowMenu}
+            >
+              {userData.image ? (
+                <img className="w-full h-full" src={userData.image} />
+              ) : (
+                <img src={profileimg} />
+              )}
             </div>
             {showMenu && (
-              <div className="absolute flex-column right-3 bg-third mt-1 mr-4 max-w-[200px] border-solid border-2 border-black">
-                {
-                  userData.username && <p className="px-3 text-xl">{userData.username}<hr></hr></p>
-                }
-                {
-                  userData.username && <Link to={"Profile"} className="hover:text-blue-300 py-3 px-3">Your account<br></br></Link>
-                }
-                {
-                  userData.email === process.env.REACT_APP_ADMIN_EMAIL && <Link to={"Admin"} className="hover:text-blue-300 py-3 px-3 mb-2">Admin panel<br></br></Link>
-                }
-                {
-                  userData.username && <Link to={"Request"} className="hover:text-blue-300 py-3 px-3">Request<br></br></Link>
-                }
+              <div className="absolute flex flex-col right-3 bg-third mt-1 mr-4 max-w-[200px] border-solid border-2 border-black">
+                {userData.username && (
+                  <p className="px-3 text-xl">
+                    {userData.username}
+                    <hr></hr>
+                  </p>
+                )}
+                {userData.username && (
+                  <Link
+                    to={"Profile"}
+                    className="hover:text-blue-300 px-3 py-1"
+                  >
+                    Your account
+                  </Link>
+                )}
+                {userData.email === process.env.REACT_APP_ADMIN_EMAIL && (
+                  <Link
+                    to={"Admin"}
+                    className="hover:text-blue-300 px-3 py-1"
+                  >
+                    Admin panel
+                  </Link>
+                )}
+                {userData.username && (
+                  <Link
+                    to={"Request"}
+                    className="hover:text-blue-300 px-3 py-1"
+                  >
+                    Request
+                  </Link>
+                )}
 
-                {
-                  userData.image ? <a className="cursor-pointer underline hover:text-red-700 py-3 px-3" onClick={handleLogout} >Sign Out</a> : <Link to={"Signin"} className="hover:text-blue-300 underline py-3 px-3 ">Sign In</Link>
-                }
+                {userData.image ? (
+                  <a
+                    className="cursor-pointer underline hover:text-red-700 px-3 py-1"
+                    onClick={handleLogout}
+                  >
+                    Sign Out
+                  </a>
+                ) : (
+                  <Link
+                    to={"Signin"}
+                    className="hover:text-blue-300 underline py-3 px-3 "
+                  >
+                    Sign In
+                  </Link>
+                )}
                 {/* mobile */}
                 <nav className="text-white md:text-lg flex flex-col md:hidden">
                   <Link to={""} className="hover:text-blue-300 px-3">
-                  <hr className="mt-1 mb-1"></hr>Home
+                    <hr className="mt-1 mb-1"></hr>Home
                   </Link>
-                  <Link to={"Whatsnew"} className="hover:text-blue-300 px-3 py-1">
+                  <Link
+                    to={"Whatsnew"}
+                    className="hover:text-blue-300 px-3 py-1"
+                  >
                     What's New
                   </Link>
                   <Link to={"Ps5"} className="hover:text-blue-300 px-3 py-1">
@@ -108,7 +147,6 @@ const Header = () => {
                 </nav>
               </div>
             )}
-
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import GameCard from '../components/GameCard';
-import { AiOutlineRight} from 'react-icons/ai';
+import { AiOutlineRight } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
 
 export const Home = () => {
@@ -15,30 +15,31 @@ export const Home = () => {
   return (
     <div className='p-2 md:p-4 text-white'>
       <div className='md:flex'>
-        <div className='md:w-full md:min-h-[300px] h-[400px] rounded bg-ninth border-solid border-8 border-primary'
+        <div className='md:w-full md:min-h-[300px] h-[300px] md:h-[400px] rounded bg-ninth border-solid border-8 border-primary'
         >
-        <h2 className='text-4xl md:text-6xl px-2 md:px-5 font-bold text-left py-20 md:py-28 sm:text-2xl sm:py-10'>Create your own<br></br><span className='text-primary'>Playstation games<br></br></span> collection</h2>
+          <h2 className='text-4xl md:text-6xl px-2 md:px-5 font-bold text-left py-20 md:py-28 sm:text-2xl sm:py-10'>Create your own<br></br><span className='text-primary'>Playstation games<br></br></span> collection</h2>
         </div>
-        
+
       </div>
       <div className='flex justify-between items-center'>
         <p className='px-2 py-2 text-xl md:text-2xl font-bold'>What's new<br></br></p>
         <Link to={"Whatsnew"} className='flex'>
           <p className='text-xl'>More</p>
-          <AiOutlineRight className='mt-2'/>
-        </Link> 
+          <AiOutlineRight className='mt-2' />
+        </Link>
       </div>
       <div className='flex gap-3'>
         <div className='gap-1 flex scrollbar-hide overflow-scroll'>
           {
             newGameList.map(game => {
               return (
-                //display game image and name from gameData
+                <Link to={`/game/${game._id}`}>
                 <GameCard
                   key={game._id}
                   image={game.image}
                   name={game.name}
                 />
+                </Link>
               )
             })
           }
@@ -48,8 +49,8 @@ export const Home = () => {
         <p className='px-2 py-2 text-xl md:text-2xl font-bold'>PS5 Games<br></br></p>
         <Link to={"Ps5"} className='flex'>
           <p className='text-xl'>More</p>
-          <AiOutlineRight className='mt-2'/>
-        </Link> 
+          <AiOutlineRight className='mt-2' />
+        </Link>
       </div>
       <div className='flex gap-3'>
         <div className='gap-1 flex scrollbar-hide overflow-scroll'>
@@ -57,11 +58,13 @@ export const Home = () => {
             ps5gameList.map(game => {
               return (
                 //display game image and name from gameData
+                <Link to={`/game/${game._id}`}>
                 <GameCard
                   key={game._id}
                   image={game.image}
                   name={game.name}
                 />
+                </Link>
               )
             })
           }
@@ -71,8 +74,8 @@ export const Home = () => {
         <p className='px-2 py-2 text-xl md:text-2xl font-bold'>PS4 Games<br></br></p>
         <Link to={"Ps4"} className='flex'>
           <p className='text-xl'>More</p>
-          <AiOutlineRight className='mt-2'/>
-        </Link> 
+          <AiOutlineRight className='mt-2' />
+        </Link>
       </div>
       <div className='flex gap-3'>
         <div className='gap-1 flex scrollbar-hide overflow-scroll'>
@@ -80,11 +83,13 @@ export const Home = () => {
             ps4gameList.map(game => {
               return (
                 //display game image and name from gameData
+                <Link to={`/game/${game._id}`}>
                 <GameCard
                   key={game._id}
                   image={game.image}
                   name={game.name}
                 />
+                </Link>
               )
             })
           }

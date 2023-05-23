@@ -20,12 +20,13 @@ export const Ps4 = () => {
           {
             ps4GameList.map(game => {
               return (
-                //display game image and name from gameData
+                <Link to={`/game/${game._id}`}>
                 <GameFeature
                   key={game._id}
                   image={game.image}
                   name={game.name}
                 />
+                </Link>
               )
             })
           }
