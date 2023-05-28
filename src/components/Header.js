@@ -27,7 +27,7 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-primary fixed shadow-md w-full h-16 z-50">
+    <header className="bg-primary fixed shadow-md w-full h-16 z-50 overflow-visible">
       {/* desktop */}
       <div className="flex items-center h-full justify-between ">
         <div className="flex items-center gap-4 hidden md:flex">
@@ -45,7 +45,7 @@ const Header = () => {
         <div className="flex-1 text-center  md:hidden flex items-center justify-center">
           <Link to={""}>
             <div className="h-16">
-              <img src={logo} className="h-16 ml-20" />
+              <img src={logo} className="mt-3 h-16 ml-20" />
             </div>
           </Link>
           <div className="absolute left-0">

@@ -22,8 +22,8 @@ export const Home = () => {
 
       </div>
       <div className='flex justify-between items-center'>
-        <p className='px-2 py-2 text-xl md:text-2xl font-bold'>What's new<br></br></p>
-        <Link to={"Whatsnew"} className='flex'>
+        <p className='px-5 py-2 text-xl md:text-2xl font-bold'>What's new<br></br></p>
+        <Link to={"Whatsnew"} className='flex mr-5'>
           <p className='text-xl'>More</p>
           <AiOutlineRight className='mt-2' />
         </Link>
@@ -46,8 +46,8 @@ export const Home = () => {
         </div>
       </div>
       <div className='flex justify-between items-center'>
-        <p className='px-2 py-2 text-xl md:text-2xl font-bold'>PS5 Games<br></br></p>
-        <Link to={"Ps5"} className='flex'>
+        <p className='px-5 py-2 text-xl md:text-2xl font-bold'>PS5 Games<br></br></p>
+        <Link to={"Ps5"} className='flex mr-5'>
           <p className='text-xl'>More</p>
           <AiOutlineRight className='mt-2' />
         </Link>
@@ -71,8 +71,8 @@ export const Home = () => {
         </div>
       </div>
       <div className='flex justify-between items-center'>
-        <p className='px-2 py-2 text-xl md:text-2xl font-bold'>PS4 Games<br></br></p>
-        <Link to={"Ps4"} className='flex'>
+        <p className='px-5 py-2 text-xl md:text-2xl font-bold'>PS4 Games<br></br></p>
+        <Link to={"Ps4"} className='flex mr-5'>
           <p className='text-xl'>More</p>
           <AiOutlineRight className='mt-2' />
         </Link>
