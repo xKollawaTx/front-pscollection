@@ -7,5 +7,6 @@ export const Store = configureStore({
     reducer: {
         user : userReducer,
         game : gameSliceReducer
+        
     },
 })

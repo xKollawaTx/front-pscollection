@@ -16,7 +16,7 @@ const CreateCollection = ({ onClose, onCreate }) => {
   const fetchCollections = async () => {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_SERVER_URL}/collection/${userData._id}`
+        `${process.env.REACT_APP_SERVER_URL}/collection/user/${userData._id}`
       );
       if (response.ok) {
         const data = await response.json();

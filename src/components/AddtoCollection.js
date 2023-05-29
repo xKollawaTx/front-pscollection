@@ -20,7 +20,7 @@ const AddtoCollection = ({ onClose, onCreate }) => {
   const fetchCollections = async () => {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_SERVER_URL}/collection/${userData._id}`
+        `${process.env.REACT_APP_SERVER_URL}/collection/user/${userData._id}`
       );
       if (response.ok) {
         const data = await response.json();
@@ -69,9 +69,31 @@ const AddtoCollection = ({ onClose, onCreate }) => {
     }
   };
 
-  const handleAddToCollection =  () => {
-
+  const handleAddToCollection = async (collectionId) => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_SERVER_URL}/collection/addgame/${collectionId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ gameId: gameID }),
+        }
+      );
+      const datares = await response.json();
+      console.log(datares);
+      if (datares.alert === "true") {
+        toast.success(datares.message);
+      } else {
+        toast.error(datares.message);
+      }
+    } catch (error) {
+      console.error("Error adding game to collection:", error);
+      toast.error("Error adding game to collection");
+    }
   };
+  
 
   const handleNewCollectionClick = () => {
     setShowForm((prevShowForm) => !prevShowForm);
