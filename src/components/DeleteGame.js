@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useDebugValue, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { toast } from "react-hot-toast";
@@ -12,6 +12,18 @@ const DeleteGame = () => {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedGame, setSelectedGame] = useState(null);
   const [editedGame, setEditedGame] = useState(null);
+
+  //fetch all games from the database
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_SERVER_URL}/games`)
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   const handleSearch = () => {
     const searchedGames = gameeditedGame.filter((game) =>
