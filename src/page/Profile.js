@@ -14,16 +14,16 @@ import axios from "axios";
 import { toast } from "react-hot-toast";
 
 const Profile = () => {
+  const userData = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const [isEditing, setIsEditing] = useState(false);
   const [selectedCollection, setSelectedCollection] = useState(null);
-  const userData = useSelector((state) => state.user);
   const [isCreatingCollection, setIsCreatingCollection] = useState(false);
   const [collections, setCollections] = useState([]);
   const [collectionGames, setCollectionGames] = useState({});
   const [showDeleteGamePopup, setShowDeleteGamePopup] = useState(false);
   const [selectedGame, setSelectedGame] = useState(null);
   const [selectedGames, setSelectedGames] = useState([]);
-
   const handleDeleteGamePopup = () => {
     setShowDeleteGamePopup(true);
   };
@@ -42,7 +42,27 @@ const Profile = () => {
   const handleCreateCollectionClick = () => {
     setIsCreatingCollection(true);
   };
-  
+  //fetch UserData after editing account
+  useEffect(() => {
+    fetchUserData();
+  }, [isEditing]);
+  const fetchUserData = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_SERVER_URL}/user/${userData._id}`
+      );
+      if (response.ok) {
+        const userData = await response.json();
+        dispatch({
+          type: "SET_USER",
+          payload: userData,
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+    console.log(userData);
+  };
 
   useEffect(() => {
     fetchCollections();
@@ -180,11 +200,11 @@ const Profile = () => {
       <div>
         {/* Button to select collection */}
         {collections.length > 0 && (
-          <div className="flex gap-4 mt-4 justify-center text-black">
+          <div className="flex justify-center gap-4 mt-4 m-auto w-[100px] text-black">
             {collections.map((collection) => (
               <button
                 key={collection._id}
-                className={`px-4 py-2 rounded-full  ${
+                className={`px-4 py-2 rounded-full mt-3  ${
                   selectedCollection === collection._id
                     ? "bg-primary"
                     : "bg-sixth"

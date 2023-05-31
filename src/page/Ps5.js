@@ -12,7 +12,7 @@ export const Ps5 = () => {
     <div className="p-2 md:p-4 text-white">
       <div className="px-5 py-5 md:px-20 flex justify-between items-center">
         <p className="text-2xl md:text-2xl font-bold">
-          PS4 Games<br></br>
+          PS5 Games<br></br>
         </p>
         <BiFilter size={50} className="" />
       </div>
