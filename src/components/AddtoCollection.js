@@ -108,7 +108,7 @@ const AddtoCollection = ({ onClose, onCreate }) => {
           {collections.map((collection) => (
             <div
               key={collection._id}
-              className="bg-tenth rounded-xl h-[60px] text-xl font-bold border-solid border-4 border-black mb-3"
+              className="bg-tenth rounded-xl h-[60px] text-xl font-bold border-solid border-4 cursor-pointer border-black mb-3"
               onClick={() => handleAddToCollection(collection._id)}
             >
               <li className="px-4 py-3 ">{collection.name}</li>

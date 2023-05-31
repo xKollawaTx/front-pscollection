@@ -1,19 +1,20 @@
 import React from 'react'
 
-const GameProfile = ({ image, name}) => {
+const GameProfile = ({ image, name, publisher, platform, gener}) => {
   return (
-    <div className="z-0 w-full min-w-[150px] max-w-[150px]  md:min-w-[300px] md:max-w-[320px] hover:shadow-lg drop-shadow-lg py-5 px-4 cursor-pointer flex flex-col">
-      <div className="h-40 sm:h-60 md:h-80 lg:h-96 overflow-hidden">
-        <img
-          src={image}
-          alt={name}
-          className="h-full w-full object-cover object-center"
-        />
-      </div>
-      <div className="mt-2">
-        <p className="text-sm font-bold md:text-bold">{name}</p>
-      </div>
+<div className="card w-96 bg-base-100 shadow-xl">
+  <figure><img src={image} /></figure>
+  <div className="card-body">
+    <h2 className="card-title">
+      {name}
+    </h2>
+    <p>{publisher}</p>
+    <div className="card-actions justify-end">
+      <div className="badge badge-outline">{platform}</div>
+      <div className="badge badge-outline">{gener}</div>
     </div>
+  </div>
+</div>
   )
 }
 

@@ -3,52 +3,18 @@ import profileimg from "../asset/profileimg.png";
 import { useSelector, useDispatch } from "react-redux";
 import { BiShow, BiHide } from "react-icons/bi";
 import { useState } from "react";
-import axios from "axios";
 
-const Editprofile = ({ onClose, onCreate }) => {
-  const dispatch = useDispatch();
+const EDP = (onClose, onCreate) => {
   const userData = useSelector((state) => state.user);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [formData, setFormData] = useState({
-    email: userData.email,
-    username: userData.username,
-    password: "",
-    confirmPassword: "",
-  });
-
   const handleShowPassword = () => {
-    setShowPassword((prev) => !prev);
+    setShowPassword((preve) => !preve);
   };
 
   const handleShowConfirmPassword = () => {
-    setShowConfirmPassword((prev) => !prev);
+    setShowConfirmPassword((preve) => !preve);
   };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    // Perform validation on the form data if needed
-
-    try {
-      const response = await axios.put(`${process.env.REACT_APP_SERVER_URL}/updateuser/${userData._id}`, formData);
-      // Handle the successful update response
-      console.log(response.data);
-      // Close the edit profile form
-      onClose();
-    } catch (error) {
-      // Handle errors
-      console.error(error);
-    }
-  };
-
-  const handleChange = (e) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      [e.target.name]: e.target.value,
-    }));
-  };
-
   return (
     <div className="bg-eighth p-3 md:p-4 text-white border-solid border-4 border-black min-w-[350px] md:min-w-[400px]">
       <div className="w-full max-w-sm text-white m-auto flex items-center flex-col p-4">
@@ -80,10 +46,7 @@ const Editprofile = ({ onClose, onCreate }) => {
           </label>
         </div>
       </div>
-      <form
-        className="m-auto py-3 flex flex-col placeholder-fifth text-left"
-        onSubmit={handleSubmit}
-      >
+      <form className="m-auto py-3 flex flex-col placeholder-fifth text-left">
         <label htmlFor="email">Email address</label>
         <div className="w-full flex px-2 py-1 bg-fourth  mt-1 mb-2 rounded focus-within:outline focus-within:outline-primary">
           <input
@@ -136,23 +99,21 @@ const Editprofile = ({ onClose, onCreate }) => {
             {showConfirmPassword ? <BiShow /> : <BiHide />}
           </span>
         </div>
-        <div className="flex items-center justify-center">
-          <button
-            type="submit"
-            className="w-full max-w-[150px] m-auto bg-sixth hover:bg-primary cursor-pointer text-black text-xl font-bold text-center py-1 rounded-full mt-4"
-          >
-            Comfirm
-          </button>
-          <button
-            className="w-full max-w-[150px] m-auto bg-red-500 hover:bg-red-600 cursor-pointer text-black text-xl font-bold text-center py-1 rounded-full mt-4"
-            onClick={onClose}
-          >
-            Cancel
-          </button>
-        </div>
+        <button
+          type="submit"
+          className="w-full max-w-[150px] m-auto  bg-sixth hover:bg-primary cursor-pointer  text-black text-xl font-bold text-center py-1 rounded-full mt-4"
+        >
+          Comfirm
+        </button>
+        <button
+          className="w-full max-w-[150px] m-auto bg-red-500 hover:bg-red-600 cursor-pointer text-black text-xl font-bold text-center py-1 rounded-full mt-4"
+          onClick={onClose}
+        >
+          Cancel
+        </button>
       </form>
     </div>
   );
 };
 
-export default Editprofile;
+export default EDP;

@@ -1,6 +1,7 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import GameCard from '../components/GameCard';
+import GameProfile from '../components/GameProfile';
 import { AiOutlineRight } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
 
@@ -38,6 +39,10 @@ export const Home = () => {
                   key={game._id}
                   image={game.image}
                   name={game.name}
+                  publisher={game.publisher}
+                  releaseDate={game.releaseDate}
+                  platform={game.platform}
+                  genre={game.genre}
                 />
                 </Link>
               )
@@ -63,6 +68,10 @@ export const Home = () => {
                   key={game._id}
                   image={game.image}
                   name={game.name}
+                  publisher={game.publisher}
+                  releaseDate={game.releaseDate}
+                  platform={game.platform}
+                  genre={game.gener}
                 />
                 </Link>
               )
@@ -88,6 +97,10 @@ export const Home = () => {
                   key={game._id}
                   image={game.image}
                   name={game.name}
+                  publisher={game.publisher}
+                  releaseDate={game.releaseDate}
+                  platform={game.platform}
+                  genre={game.genre}
                 />
                 </Link>
               )

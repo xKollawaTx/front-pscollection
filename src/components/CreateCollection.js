@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
-import { BiPlusCircle } from "react-icons/bi";
+import { BiPlusCircle, BiEdit } from "react-icons/bi";
+import { MdOutlineDeleteForever } from "react-icons/md";
 import { toast } from "react-hot-toast";
 import { useSelector } from "react-redux";
+import axios from "axios";
+
 
 const CreateCollection = ({ onClose, onCreate }) => {
   const [collectionName, setCollectionName] = useState("");
@@ -32,6 +35,36 @@ const CreateCollection = ({ onClose, onCreate }) => {
   const handleCollectionNameChange = (event) => {
     setCollectionName(event.target.value);
   };
+
+  const handleDeleteCollectionClick = (collection) => {
+    axios
+      .delete(`${process.env.REACT_APP_SERVER_URL}/deletecollection/${collection._id}`)
+      .then((res) => {
+        toast.success(res.data.message);
+        fetchCollections();
+      })
+      .catch((err) => {
+        toast.error(err.message);
+      });
+  };
+
+  const handleEditCollectionClick = (collection) => {
+    const newCollectionName = prompt("Enter new collection name", collection.name);
+    if (newCollectionName) {
+      axios
+        .put(`${process.env.REACT_APP_SERVER_URL}/updatecollection/${collection._id}`, {
+          name: newCollectionName,
+        })
+        .then((res) => {
+          toast.success(res.data.message);
+          fetchCollections();
+        })
+        .catch((err) => {
+          toast.error(err.message);
+        });
+    }
+  };
+  
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -78,9 +111,20 @@ const CreateCollection = ({ onClose, onCreate }) => {
           {collections.map((collection) => (
             <div
               key={collection._id}
-              className="bg-tenth rounded-xl h-[60px] text-xl font-bold border-solid border-4 border-black mb-3"
+              className="flex bg-tenth rounded-xl h-[60px] text-xl font-bold border-solid border-4 border-black mb-3 cursor-pointer"
             >
               <li className="px-4 py-3 ">{collection.name}</li>
+              <div className="flex-grow"></div>
+              <BiEdit
+                size={35}
+                className="mt-2 hover:text-primary"
+                onClick={() => handleEditCollectionClick(collection)}
+              />
+              <MdOutlineDeleteForever
+                size={35}
+                className="mt-2 hover:text-red-500"
+                onClick={() => handleDeleteCollectionClick(collection)}
+              />
             </div>
           ))}
         </ul>
