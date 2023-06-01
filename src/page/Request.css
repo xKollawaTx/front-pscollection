@@ -1,7 +1,11 @@
+.request-container {
+  position: relative;
+  min-height: 100vh;
+}
 .tooltiptext {
     visibility: hidden;
     width: 180px;
-    color: #fff;
+    color: #1773B0;
     text-align: center;
     border-radius: 6px;
     padding: 5px;

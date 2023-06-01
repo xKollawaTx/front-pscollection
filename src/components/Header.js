@@ -58,13 +58,13 @@ const Header = () => {
             <Link to={""} className="">
               Home
             </Link>
-            <Link to={"Whatsnew"} className="">
+            <Link to={"whatsnew"} className="">
               What's New
             </Link>
-            <Link to={"Ps5"} className="">
+            <Link to={"ps5"} className="">
               PS5
             </Link>
-            <Link to={"Ps4"} className="">
+            <Link to={"ps4"} className="">
               PS4
             </Link>
           </nav>
@@ -89,7 +89,7 @@ const Header = () => {
                 )}
                 {userData.username && (
                   <Link
-                    to={"Profile"}
+                    to={"profile"}
                     className="hover:text-blue-300 px-3 py-1"
                   >
                     Your account
@@ -97,7 +97,7 @@ const Header = () => {
                 )}
                 {userData.email === process.env.REACT_APP_ADMIN_EMAIL && (
                   <Link
-                    to={"Admin"}
+                    to={"admin"}
                     className="hover:text-blue-300 px-3 py-1"
                   >
                     Admin panel
@@ -105,7 +105,7 @@ const Header = () => {
                 )}
                 {userData.username && (
                   <Link
-                    to={"Request"}
+                    to={"request"}
                     className="hover:text-blue-300 px-3 py-1"
                   >
                     Request
@@ -121,7 +121,7 @@ const Header = () => {
                   </a>
                 ) : (
                   <Link
-                    to={"Signin"}
+                    to={"signin"}
                     className="hover:text-blue-300 underline py-3 px-3 "
                   >
                     Sign In
@@ -133,15 +133,15 @@ const Header = () => {
                     <hr className="mt-1 mb-1"></hr>Home
                   </Link>
                   <Link
-                    to={"Whatsnew"}
+                    to={"whatsnew"}
                     className="hover:text-blue-300 px-3 py-1"
                   >
                     What's New
                   </Link>
-                  <Link to={"Ps5"} className="hover:text-blue-300 px-3 py-1">
+                  <Link to={"ps5"} className="hover:text-blue-300 px-3 py-1">
                     PS5
                   </Link>
-                  <Link to={"Ps4"} className="hover:text-blue-300 px-3 py-1">
+                  <Link to={"ps4"} className="hover:text-blue-300 px-3 py-1">
                     PS4
                   </Link>
                 </nav>

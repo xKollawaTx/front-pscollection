@@ -14,7 +14,6 @@ import axios from "axios";
 import { toast } from "react-hot-toast";
 
 const Profile = () => {
-  const userData = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const [isEditing, setIsEditing] = useState(false);
   const [selectedCollection, setSelectedCollection] = useState(null);
@@ -63,6 +62,7 @@ const Profile = () => {
     }
     console.log(userData);
   };
+  const userData = useSelector((state) => state.user);
 
   useEffect(() => {
     fetchCollections();

@@ -1,21 +1,30 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { BiPlusCircle } from "react-icons/bi";
 import profileimg from "../asset/profileimg.png";
 import AddtoCollection from "../components/AddtoCollection";
+import { toast } from "react-hot-toast";
 
 const Gamedetail = () => {
   const { id: gameID } = useParams();
   const [gameData, setGameData] = useState({});
   const userData = useSelector((state) => state.user);
 
-  const[isAddtoCollection, setIsAddtoCollection] = useState(false);
-  const handleAddtoCollection = () => {
-    setIsAddtoCollection(false)
-  }
+  const [isAddtoCollection, setIsAddtoCollection] = useState(false);
+  const navigate = useNavigate();
 
-  
+  const handleAddtoCollection = () => {
+    if (userData._id) {
+      setIsAddtoCollection(true);
+    } else {
+      // Show toast notification for sign-in
+      toast("Please sign in first!");
+      // Redirect to the sign-in page
+      navigate("/signin");
+    }
+  };
+
   console.log(gameID);
   console.log(gameData);
 
@@ -45,7 +54,6 @@ const Gamedetail = () => {
       day: "numeric",
     });
   }
-
   return (
     <div className="p-2 md:p-4 text-white">
       <div className="md:flex">
@@ -67,7 +75,7 @@ const Gamedetail = () => {
 
         <div className="px-10 md:px-[350px]">
           <p className="text-sm py-2 mt-4 md:text-xl md:mr-auto font-bold text-left">
-            Gener: {gameData.gener}
+            Genre: {gameData.genre}
           </p>
           <p className="text-sm py-2 md:text-xl md:mr-auto font-bold text-left">
             Rating: {gameData.rating}
@@ -87,15 +95,16 @@ const Gamedetail = () => {
         </div>
       </div>
       <div>
-        <button className="w-full mt-5 flex flex-row max-w-[240px] m-auto  bg-sixth hover:bg-primary cursor-pointer  text-black text-xl font-bold py-1 rounded-full"
-        onClick={() => setIsAddtoCollection(true)}
+        <button
+          className="w-full mt-5 flex flex-row max-w-[240px] m-auto  bg-sixth hover:bg-primary cursor-pointer  text-black text-xl font-bold py-1 rounded-full"
+          onClick={handleAddtoCollection}
         >
           <BiPlusCircle size={30} className="ml-5" />
           <p className="ml-1 mr-1 mt-0.5">Add to collection</p>
         </button>
         {isAddtoCollection && (
           <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
-            <AddtoCollection 
+            <AddtoCollection
               onClose={() => setIsAddtoCollection(false)}
               onCreate={handleAddtoCollection}
             />
@@ -128,7 +137,9 @@ const Gamedetail = () => {
             </div>
             <div className="ml-4 mt-4">
               <p className="text-2xl font-bold">{userData.username}</p>
-              <p className="text-2sm">Add to collection date: {formatDate(gameData.dateAdded)}</p>
+              <p className="text-2sm">
+                Add to collection date: {formatDate(gameData.dateAdded)}
+              </p>
             </div>
           </div>
         </div>

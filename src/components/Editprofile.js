@@ -11,6 +11,8 @@ const Editprofile = ({ onClose }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [email, setEmail] = useState(userData.email); // New state for email
+  const [username, setUsername] = useState(userData.username); // New state for username
   const dispatch = useDispatch();
 
   const handleShowPassword = () => {
@@ -23,8 +25,6 @@ const Editprofile = ({ onClose }) => {
 
   const handleEdit = async (event) => {
     event.preventDefault();
-    const email = event.target.email.value;
-    const username = event.target.username.value;
     const password = event.target.password.value;
     const confirmpassword = event.target.confirmpassword.value;
 
@@ -74,9 +74,8 @@ const Editprofile = ({ onClose }) => {
         dispatch({ type: "UPDATE_USER", payload: response.data.user });
         if (response.data.message) {
           toast.success(response.data.message);
-        }
-        else {
-            toast.error(response.data.error);
+        } else {
+          toast.error(response.data.error);
         }
         onClose();
       } catch (error) {
@@ -88,6 +87,7 @@ const Editprofile = ({ onClose }) => {
       console.log("No changes made");
     }
   };
+
   return (
     <div className="bg-eighth p-3 md:p-4 text-white border-solid border-4 border-black min-w-[350px] md:min-w-[400px]">
       <div className="w-full max-w-sm text-white m-auto flex items-center flex-col p-4">
@@ -131,23 +131,27 @@ const Editprofile = ({ onClose }) => {
         onSubmit={handleEdit}
       >
         <label htmlFor="email">Email address</label>
-        <div className="w-full flex px-2 py-1 bg-fourth  mt-1 mb-2 rounded focus-within:outline focus-within:outline-primary">
+        <div className="w-full flex px-2 py-1 bg-fourth mt-1 mb-2 rounded focus-within:outline focus-within:outline-primary">
           <input
-            type={"text"}
+            type="text"
             id="email"
             name="email"
             placeholder={userData.email}
-            className=" bg-fourth text-black w-full border-none outline-none"
+            value={email} // Use the email state value
+            onChange={(e) => setEmail(e.target.value)} // Update the email state
+            className="bg-fourth text-black w-full border-none outline-none"
           />
         </div>
         <label htmlFor="username">Username</label>
-        <div className="w-full flex px-2 py-1 bg-fourth  mt-1 mb-2 rounded focus-within:outline focus-within:outline-primary">
+        <div className="w-full flex px-2 py-1 bg-fourth mt-1 mb-2 rounded focus-within:outline focus-within:outline-primary">
           <input
-            type={"text"}
+            type="text"
             id="username"
             name="username"
             placeholder={userData.username}
-            className=" bg-fourth text-black w-full border-none outline-none"
+            value={username} // Use the username state value
+            onChange={(e) => setUsername(e.target.value)} // Update the username state
+            className="bg-fourth text-black w-full border-none outline-none"
           />
         </div>
         <label htmlFor="password">Password</label>

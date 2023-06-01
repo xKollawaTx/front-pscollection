@@ -1,11 +1,23 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import GameCard from '../components/GameCard';
-import GameProfile from '../components/GameProfile';
 import { AiOutlineRight } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
+import { setDataGame } from '../redux/gameSlide';
 
 export const Home = () => {
+  const dispatch = useDispatch()
+  const fetchGameData = useSelector((state)=>state.game)
+  
+  useEffect(()=>{
+    (async()=>{
+      const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/game`)
+      const resData = await res.json()
+      dispatch(setDataGame(resData))
+    })()
+  },[])
+  console.log(fetchGameData)
   const gameData = useSelector((state) => state.game.gameList)
   const newGameList = gameData.slice(0, 10)
   console.log(newGameList)

@@ -113,7 +113,7 @@ const Signin = () => {
             <div className="w-full max-w-sm text-white m-auto flex items-center flex-col p-4">
                 <h1 className='text-center text-xl '>Don’t have account?</h1>
             </div>
-            <Link to={"/Signup"} className=" max-w-sm text-fifth bg-seventh rounded m-auto flex items-center flex-col p-1 cursor-pointer"
+            <Link to={"/signup"} className=" max-w-sm text-fifth bg-seventh rounded m-auto flex items-center flex-col p-1 cursor-pointer"
                 style={{ maxWidth: "400px" }}>
                 <p className='text-center text-xl font-semibold'>Create New Account</p>
             </Link>

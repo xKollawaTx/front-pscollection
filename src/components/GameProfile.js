@@ -1,6 +1,6 @@
 import React from 'react'
 
-const GameProfile = ({ image, name, publisher, platform, gener}) => {
+const GameProfile = ({ image, name, publisher, platform, genre}) => {
   return (
 <div className="card w-96 bg-base-100 shadow-xl">
   <figure><img src={image} /></figure>
@@ -11,7 +11,7 @@ const GameProfile = ({ image, name, publisher, platform, gener}) => {
     <p>{publisher}</p>
     <div className="card-actions justify-end">
       <div className="badge badge-outline">{platform}</div>
-      <div className="badge badge-outline">{gener}</div>
+      <div className="badge badge-outline">{genre}</div>
     </div>
   </div>
 </div>

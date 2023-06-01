@@ -1,4 +1,5 @@
 import Header from "./components/Header";
+import Footer from "./components/Footer";
 import { Outlet } from "react-router-dom";
 import toast, { Toaster } from 'react-hot-toast';
 import { useEffect } from "react";
@@ -28,6 +29,7 @@ function App() {
         <main className="pt-16 bg-second min-h-[calc(100vh)] text-white">
           <Outlet />
         </main>
+        <Footer />
       </div>
     </>
   );

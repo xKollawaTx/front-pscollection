@@ -3,8 +3,21 @@ import { Link } from "react-router-dom";
 import { BiFilter } from "react-icons/bi";
 import { useSelector } from "react-redux";
 import GameFeature from "../components/GameFeature";
-
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { setDataGame } from "../redux/gameSlide";
 export const Ps5 = () => {
+  const dispatch = useDispatch();
+  const fetchGameData = useSelector((state) => state.game);
+
+  useEffect(() => {
+    (async () => {
+      const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/game`);
+      const resData = await res.json();
+      dispatch(setDataGame(resData));
+    })();
+  }, []);
+  console.log(fetchGameData);
   const gameData = useSelector((state) => state.game.gameList);
   const ps5GameList = gameData.filter((game) => game.platform === "ps5");
 

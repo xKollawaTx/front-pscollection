@@ -2,32 +2,23 @@ import React from "react";
 import { BiCloudUpload } from "react-icons/bi";
 import { ImagetoBase64 } from "../utils/ImagetoBase64";
 import { useState } from "react";
+import { useSelector,useDispatch } from "react-redux";
 import { toast } from "react-hot-toast";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { setDataGame } from "../redux/gameSlide";
 
-const Addgame = () => {
+const AddRequest = ({ onClose }) => {
+  const dispatch = useDispatch();
+  const userData = useSelector((state) => state.user);
+  console.log(userData._id);
   const [data, setData] = useState({
+    user: userData._id,
     image: "",
     name: "",
     platform: "",
     genre: "",
     rating: "",
     publisher: "",
-    dateAdded: new Date(),
-  })
-  const dispatch = useDispatch()
-  const fetchGameData = useSelector((state)=>state.game)
-  
-  useEffect(()=>{
-    (async()=>{
-      const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/game`)
-      const resData = await res.json()
-      dispatch(setDataGame(resData))
-    })()
-  },[])
-  console.log(fetchGameData)
+    state: "wait for approval",
+  });
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -35,9 +26,9 @@ const Addgame = () => {
       return {
         ...preve,
         [name]: value,
-      }
-    })
-  }
+      };
+    });
+  };
 
   const uploadImage = async (e) => {
     const data = await ImagetoBase64(e.target.files[0]);
@@ -46,73 +37,74 @@ const Addgame = () => {
       return {
         ...preve,
         image: data,
-      }
-    })
-
-  }
+      };
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(data);
-
+  
     const { image, name, platform, genre, rating, publisher } = data;
-
+  
     if (image && name && platform && genre && rating && publisher) {
-
-      setData((preve) => ({
-        ...preve,
-        dateAdded: new Date(),
-      }))
-
-      const fetchData = await fetch(`${process.env.REACT_APP_SERVER_URL}/addgame`, {
+      dispatch({ type: "GET_USER_ID" });
+  
+      const fetchData = await fetch(`${process.env.REACT_APP_SERVER_URL}/createrequest`, {
         method: "POST",
         headers: {
-          "content-type": "application/json",
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
-      })
-
+        body: JSON.stringify({ ...data, userId: userData._id }), // Include the userId in the request body
+      });
+  
       const fetchDataRes = await fetchData.json();
-
       console.log(fetchDataRes);
-      toast(fetchDataRes.message)
-
-      setData(() => {
-        return {
-          image: "",
-          name: "",
-          platform: "",
-          genre: "",
-          rating: "",
-          publisher: "",
-          dateAdded: new Date(),
-        }
-      })
+      toast.success(fetchDataRes.message);
+      setData(() => ({
+        user: userData._id,
+        image: "",
+        name: "",
+        platform: "",
+        genre: "",
+        rating: "",
+        publisher: "",
+        state: "wait for approval",
+      }));
       console.log(setData);
-    }
-    else {
+    } else {
       toast.error("Please fill all the fields");
     }
-  }
-
-
+  };
+  
 
   return (
-    <div className="p-4 text-white max-w-[500px] m-auto">
-      <div className=" rounded text-white  m-auto flex items-center flex-col p-4 border-solid border-2 border-black bg-eighth">
+    <div className="p-4 text-white max-w-[400px] m-auto bg-eighth border-solid border-2 border-black ">
+      <div className=" rounded text-white  m-auto flex items-center flex-col p-4">
         <h1 className="text-center text-2xl font-bold mb-5">Add game</h1>
         <label htmlFor="image">
           <div className="h-40 w-[350px] bg-slate-200 rounded flex items-center justify-center cursor-pointer">
-            {
-              data.image ? <img src={data.image} className="h-full" /> : <span className="text-6xl text-black"><BiCloudUpload /></span>
-            }
-            <input type={"file"} accept="image/*" id="image" onChange={uploadImage} className="hidden" />
+            {data.image ? (
+              <img src={data.image} className="h-full" alt="Game Cover" />
+            ) : (
+              <span className="text-6xl text-black">
+                <BiCloudUpload />
+              </span>
+            )}
+            <input
+              type={"file"}
+              accept="image/*"
+              id="image"
+              onChange={uploadImage}
+              className="hidden"
+            />
           </div>
-
         </label>
       </div>
-      <div className="max-w-[500px] min-w-[350px] mt-4 border-solid border-2 border-black bg-eighth">
-        <form className="m-auto py-4 max-w-[400px] flex flex-col placeholder-fifth" onSubmit={handleSubmit} >
+      <div className="max-w-[500px] min-w-[350px] mt-4 ">
+        <form
+          className="m-auto py-4 max-w-[400px] flex flex-col placeholder-fifth"
+          onSubmit={handleSubmit}
+        >
           <label htmlFor="gamename">Game name</label>
           <div className="w-full flex px-2 py-1 bg-fourth  mt-1 mb-2 rounded focus-within:outline focus-within:outline-primary">
             <input
@@ -130,7 +122,12 @@ const Addgame = () => {
           </label>
           <hr className="mb-3"></hr>
           <div className="w-full mb-2 px-1 py-1 bg-fourth text-black rounded focus-within:outline focus-within:outline-primary">
-            <select className="bg-fourth text-black w-full rounded" name='platform' onChange={handleOnChange} value={data.platform}>
+            <select
+              className="bg-fourth text-black w-full rounded"
+              name="platform"
+              onChange={handleOnChange}
+              value={data.platform}
+            >
               <option selected>Choose Platform</option>
               <option value="ps5">PS5</option>
               <option value="ps4">PS4</option>
@@ -141,8 +138,13 @@ const Addgame = () => {
           </label>
           <hr className="mb-3"></hr>
           <div className=" w-full mb-2 px-1 py-1 bg-fourth text-black rounded focus-within:outline focus-within:outline-primary">
-            <select className="bg-fourth text-black w-full rounded" name='genre' onChange={handleOnChange} value={data.genre}>
-              <option selected>Choose genre</option>
+            <select
+              className="bg-fourth text-black w-full rounded"
+              name="genre"
+              onChange={handleOnChange}
+              value={data.genre}
+            >
+              <option selected>Choose Genre</option>
               <option value="Action">Action</option>
               <option value="Adventure">Adventure</option>
               <option value="Family">Family</option>
@@ -162,7 +164,12 @@ const Addgame = () => {
           </label>
           <hr className="mb-3"></hr>
           <div className="w-full mb-2 px-1 py-1 bg-fourth text-black rounded focus-within:outline focus-within:outline-primary">
-            <select className="bg-fourth text-black w-full rounded" name="rating" onChange={handleOnChange} value={data.rating}>
+            <select
+              className="bg-fourth text-black w-full rounded"
+              name="rating"
+              onChange={handleOnChange}
+              value={data.rating}
+            >
               <option selected>Choose Rating</option>
               <option value="EVERYONE">E</option>
               <option value="EVERYONE 10+">E10+</option>
@@ -187,12 +194,19 @@ const Addgame = () => {
             />
           </div>
           <div className="flex">
-            <button className="w-full max-w-[150px] m-auto  bg-sixth hover:bg-primary cursor-pointer  text-black text-xl font-bold text-center py-1 rounded-full mt-4">
+            <button
+              className="w-full max-w-[150px] m-auto  bg-sixth hover:bg-primary cursor-pointer  text-black text-xl font-bold text-center py-1 rounded-full mt-4"
+              type="submit"
+            >
               Confirm
             </button>
-            {/* <button className="w-full max-w-[150px] m-auto  bg-sixth hover:bg-primary cursor-pointer  text-black text-xl font-bold text-center py-1 rounded-full mt-4">
+            <button
+              className="w-full max-w-[150px] m-auto  bg-sixth hover:bg-primary cursor-pointer  text-black text-xl font-bold text-center py-1 rounded-full mt-4"
+              type="button"
+              onClick={onClose}
+            >
               Cancel
-            </button> */}
+            </button>
           </div>
         </form>
       </div>
@@ -200,4 +214,4 @@ const Addgame = () => {
   );
 };
 
-export default Addgame;
+export default AddRequest;
