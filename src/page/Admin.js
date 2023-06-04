@@ -7,6 +7,7 @@ import {
   AccordionHeader,
   AccordionBody,
 } from "@material-tailwind/react";
+import { Link } from "react-router-dom";
 
 function Icon({ id, open }) {
   return (
@@ -37,21 +38,13 @@ const Admin = () => {
       <div className="w-full max-w-sm text-white m-auto flex items-center flex-col p-4">
         <p className="px-2 py-2 text-xl md:text-2xl font-bold">Admin Panel</p>
       </div>
+      <div className="bg-tenth rounded mb-5 h-[70px] border-solid border-4 border-eleventh"
+      >
+        <Link to="/requestadmin">
+        <p className="px-3 text-2xl py-4 font-bold">All Requests</p>
+        </Link>
+      </div>
       <Fragment className="">
-        <Accordion open={open === 3} icon={<Icon id={3} open={open} />}>
-          <AccordionHeader
-            className="bg-tenth rounded z-0 mb-5 border-solid border-4 border-eleventh"
-            onClick={() => handleOpen(3)}
-          >
-            <p className="px-3 text-2xl">All Request</p>
-          </AccordionHeader>
-          <AccordionBody>
-            We&apos;re not always in the position that we want to be at.
-            We&apos;re constantly growing. We&apos;re constantly making
-            mistakes. We&apos;re constantly trying to express ourselves and
-            actualize our dreams.
-          </AccordionBody>
-        </Accordion>
         <Accordion open={open === 1} icon={<Icon id={1} open={open} />}>
           <AccordionHeader
             className="bg-tenth rounded mb-5 border-solid border-4 border-eleventh"

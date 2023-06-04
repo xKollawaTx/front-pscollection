@@ -200,20 +200,24 @@ const Profile = () => {
       <div>
         {/* Button to select collection */}
         {collections.length > 0 && (
-          <div className="flex justify-center gap-4 mt-4 m-auto w-[100px] text-black">
-            {collections.map((collection) => (
-              <button
-                key={collection._id}
-                className={`px-4 py-2 rounded-full mt-3  ${
-                  selectedCollection === collection._id
-                    ? "bg-primary"
-                    : "bg-sixth"
-                }`}
-                onClick={() => handleSelectCollection(collection._id)}
-              >
-                {collection.name}
-              </button>
-            ))}
+          <div className="flex justify-center mt-4">
+            <div className="max-w-screen-lg overflow-x-auto">
+              <div className="flex gap-4 text-black">
+                {collections.map((collection) => (
+                  <button
+                    key={collection._id}
+                    className={`px-4 py-2 rounded-full mt-3  ${
+                      selectedCollection === collection._id
+                        ? "bg-primary"
+                        : "bg-sixth"
+                    }`}
+                    onClick={() => handleSelectCollection(collection._id)}
+                  >
+                    {collection.name}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         )}
       </div>
@@ -270,7 +274,9 @@ const Profile = () => {
       {showDeleteGamePopup && (
         <div className="fixed z-999 top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
           <div className="bg-eighth border-solid border-4 border-black p-4 rounded w-[400px]">
-            <h2 className="text-xl font-bold mb-4">Delete game from your collection</h2>
+            <h2 className="text-xl font-bold mb-4">
+              Delete game from your collection
+            </h2>
             <div className="mt-4">
               {collectionGames[selectedCollection] &&
               collectionGames[selectedCollection].length > 0 ? (
@@ -310,9 +316,7 @@ const Profile = () => {
       )}
       {isEditing && (
         <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
-          <Editprofile className="z-10"
-          onClose={() => setIsEditing(false)}
-          />
+          <Editprofile className="z-10" onClose={() => setIsEditing(false)} />
         </div>
       )}
       {isCreatingCollection && (

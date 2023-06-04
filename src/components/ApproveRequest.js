@@ -1,115 +1,109 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { BiCloudUpload } from "react-icons/bi";
 import { ImagetoBase64 } from "../utils/ImagetoBase64";
-import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-hot-toast";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { setDataGame } from "../redux/gameSlide";
 
-const Addgame = () => {
-  const [data, setData] = useState({
-    image: "",
-    name: "",
-    platform: "",
-    genre: "",
-    rating: "",
-    publisher: "",
-    dateAdded: new Date(),
-  });
+const ApproveRequest = ({ request, onClose }) => {
   const dispatch = useDispatch();
-  const fetchGameData = useSelector((state) => state.game);
+  const userData = useSelector((state) => state.user);
+
+  const [data, setData] = useState({
+    user: userData._id,
+    image: request.image,
+    name: request.name,
+    platform: request.platform,
+    genre: request.genre,
+    rating: request.rating,
+    publisher: request.publisher,
+    state: request.state,
+  });
 
   useEffect(() => {
-    (async () => {
-      const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/game`);
-      const resData = await res.json();
-      dispatch(setDataGame(resData));
-    })();
-  }, []);
-  console.log(fetchGameData);
+    setData({
+      user: userData._id,
+      image: request.image,
+      name: request.name,
+      platform: request.platform,
+      genre: request.genre,
+      rating: request.rating,
+      publisher: request.publisher,
+      state: request.state,
+    });
+  }, [request, userData._id]);
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
-    setData((preve) => {
-      return {
-        ...preve,
-        [name]: value,
-      };
-    });
+    setData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const uploadImage = async (e) => {
-    const data = await ImagetoBase64(e.target.files[0]);
-    // console.log(data);
-    setData((preve) => {
-      return {
-        ...preve,
-        image: data,
-      };
-    });
+    const imageData = await ImagetoBase64(e.target.files[0]);
+    setData((prev) => ({
+      ...prev,
+      image: imageData,
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(data);
-
+  
     const { image, name, platform, genre, rating, publisher } = data;
-
+  
     if (image && name && platform && genre && rating && publisher) {
-      setData((preve) => ({
-        ...preve,
-        dateAdded: new Date(),
-      }));
-
-      const fetchData = await fetch(
-        `${process.env.REACT_APP_SERVER_URL}/addgame`,
+      dispatch({ type: "GET_USER_ID" });
+  
+      // Update request
+      const updateRequestResponse = await fetch(
+        `${process.env.REACT_APP_SERVER_URL}/updaterequest/${request._id}`,
         {
-          method: "POST",
+          method: "PUT",
           headers: {
-            "content-type": "application/json",
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify(data),
+          body: JSON.stringify({ ...data, userId: userData._id, state: "approved" }),
         }
       );
-
-      const fetchDataRes = await fetchData.json();
-
-      console.log(fetchDataRes);
-      toast(fetchDataRes.message);
-
-      setData(() => {
-        return {
-          image: "",
-          name: "",
-          platform: "",
-          genre: "",
-          rating: "",
-          publisher: "",
-          dateAdded: new Date(),
-        };
+      const updateRequestData = await updateRequestResponse.json();
+      console.log(updateRequestData);
+      toast.success(updateRequestData.message);
+  
+      // Add game
+      const addGameResponse = await fetch(`${process.env.REACT_APP_SERVER_URL}/addgame`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ...data, userId: userData._id }),
       });
-      console.log(setData);
+      const addGameData = await addGameResponse.json();
+      console.log(addGameData);
+      toast.success(addGameData.message);
+  
+      onClose(); // Close the component
     } else {
       toast.error("Please fill all the fields");
     }
   };
 
   return (
-    <div className="p-4 text-white max-w-[500px] m-auto">
-      <div className=" rounded text-white  m-auto flex items-center flex-col p-4 border-solid border-2 border-black bg-eighth">
-        <h1 className="text-center text-2xl font-bold mb-5">Add game</h1>
+    <div className="p-4 text-white max-w-[400px] m-auto bg-eighth border-solid border-2 border-black">
+      <div className="rounded text-white  m-auto flex items-center flex-col p-4">
+        <h1 className="text-center text-2xl font-bold mb-5">Edit Game</h1>
         <label htmlFor="image">
           <div className="h-40 w-[350px] bg-slate-200 rounded flex items-center justify-center cursor-pointer">
             {data.image ? (
-              <img src={data.image} className="h-full" />
+              <img src={data.image} className="h-full" alt="Game Cover" />
             ) : (
               <span className="text-6xl text-black">
                 <BiCloudUpload />
               </span>
             )}
             <input
-              type={"file"}
+              type="file"
               accept="image/*"
               id="image"
               onChange={uploadImage}
@@ -118,7 +112,7 @@ const Addgame = () => {
           </div>
         </label>
       </div>
-      <div className="max-w-[500px] min-w-[350px] mt-4 border-solid border-2 border-black bg-eighth">
+      <div className="max-w-[500px] min-w-[350px] mt-0">
         <form
           className="m-auto py-4 max-w-[400px] flex flex-col placeholder-fifth"
           onSubmit={handleSubmit}
@@ -126,39 +120,36 @@ const Addgame = () => {
           <label htmlFor="gamename">Game name</label>
           <div className="w-full flex px-2 py-1 bg-fourth  mt-1 mb-2 rounded focus-within:outline focus-within:outline-primary">
             <input
-              type={"text"}
+              type="text"
               id="name"
               name="name"
               placeholder="Enter game name"
-              className=" bg-fourth text-black w-full border-none outline-none"
+              className="bg-fourth text-black w-full border-none outline-none"
               onChange={handleOnChange}
               value={data.name}
             />
           </div>
-          <label className="mb-1" htmlFor="platform">
-            Platform
-          </label>
-          <hr className="mb-3"></hr>
-          <div className="w-full mb-2 px-1 py-1 bg-fourth text-black rounded focus-within:outline focus-within:outline-primary">
+          {/* Rest of the form fields */}
+          {/* ... */}
+          <label htmlFor="platform">Platform</label>
+          <div className="w-full flex px-2 py-1 bg-fourth  mt-1 mb-2 rounded focus-within:outline focus-within:outline-primary">
             <select
-              className="bg-fourth text-black w-full rounded"
+              className="bg-fourth text-black w-full border-none outline-none"
               name="platform"
+              id="platform"
               onChange={handleOnChange}
               value={data.platform}
             >
-              <option selected>Choose Platform</option>
               <option value="ps5">PS5</option>
               <option value="ps4">PS4</option>
             </select>
           </div>
-          <label className="mb-1" htmlFor="genre">
-            Genre
-          </label>
-          <hr className="mb-3"></hr>
-          <div className=" w-full mb-2 px-1 py-1 bg-fourth text-black rounded focus-within:outline focus-within:outline-primary">
+          <label htmlFor="genre">Genre</label>
+          <div className="w-full flex px-2 py-1 bg-fourth  mt-1 mb-2 rounded focus-within:outline focus-within:outline-primary">
             <select
-              className="bg-fourth text-black w-full rounded"
+              className="bg-fourth text-black w-full border-none outline-none"
               name="genre"
+              id="genre"
               onChange={handleOnChange}
               value={data.genre}
             >
@@ -177,14 +168,12 @@ const Addgame = () => {
               <option value="Strategy">Strategy</option>
             </select>
           </div>
-          <label className="mb-1" htmlFor="rating">
-            Rating
-          </label>
-          <hr className="mb-3"></hr>
-          <div className="w-full mb-2 px-1 py-1 bg-fourth text-black rounded focus-within:outline focus-within:outline-primary">
+          <label htmlFor="rating">Rating</label>
+          <div className="w-full flex px-2 py-1 bg-fourth  mt-1 mb-2 rounded focus-within:outline focus-within:outline-primary">
             <select
-              className="bg-fourth text-black w-full rounded"
+              className="bg-fourth text-black w-full border-none outline-none"
               name="rating"
+              id="rating"
               onChange={handleOnChange}
               value={data.rating}
             >
@@ -202,22 +191,29 @@ const Addgame = () => {
           <label htmlFor="publisher">Publisher</label>
           <div className="w-full flex px-2 py-1 bg-fourth  mt-1 mb-2 rounded focus-within:outline focus-within:outline-primary">
             <input
-              type={"text"}
+              type="text"
               id="publisher"
               name="publisher"
               placeholder="Enter publisher"
-              className=" bg-fourth text-black w-full border-none outline-none"
+              className="bg-fourth text-black w-full border-none outline-none"
               onChange={handleOnChange}
               value={data.publisher}
             />
           </div>
           <div className="flex">
-            <button className="w-full max-w-[150px] m-auto  bg-sixth hover:bg-primary cursor-pointer  text-black text-xl font-bold text-center py-1 rounded-full mt-4">
-              Confirm
+            <button
+              className="w-full max-w-[150px] m-auto bg-green-700 hover:bg-green-500 cursor-pointer text-black text-xl font-bold text-center py-1 rounded-full mt-4"
+              type="submit"
+            >
+              Approve
             </button>
-            {/* <button className="w-full max-w-[150px] m-auto  bg-sixth hover:bg-primary cursor-pointer  text-black text-xl font-bold text-center py-1 rounded-full mt-4">
+            <button
+              className="w-full max-w-[150px] m-auto bg-sixth hover:bg-primary cursor-pointer text-black text-xl font-bold text-center py-1 rounded-full mt-4"
+              type="button"
+              onClick={onClose}
+            >
               Cancel
-            </button> */}
+            </button>
           </div>
         </form>
       </div>
@@ -225,4 +221,4 @@ const Addgame = () => {
   );
 };
 
-export default Addgame;
+export default ApproveRequest;

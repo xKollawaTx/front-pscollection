@@ -32,11 +32,11 @@ const DeleteGame = () => {
     const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/game`);
     const resData = await res.json();
     dispatch(setDataGame(resData));
-  
+
     const searchedGames = resData.filter((game) =>
       game.name.toLowerCase().includes(searchInput.toLowerCase())
     );
-  
+
     setSearchResults(searchedGames);
   };
 
@@ -165,7 +165,7 @@ const DeleteGame = () => {
           )}
           {editModalOpen && selectedGame && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-              <div className="bg-second p-4 min-w-[350px] min-h-[400px] md:min-w-[500px] md:h-[510px] rounded-lg">
+              <div className="bg-eighth p-4 min-w-[350px] min-h-[400px] md:min-w-[500px] md:h-[510px] rounded-lg">
                 <h2 className="text-xl text-center font-bold mb-2">
                   Edit Game
                 </h2>
@@ -263,6 +263,30 @@ const DeleteGame = () => {
                       <option value="Strategy">Strategy</option>
                     </select>
                   </div>
+                  <label htmlFor="rating">Rating</label>
+                  <div className="w-full flex px-1 py-1 bg-fourth  mt-1 mb-2 rounded focus-within:outline focus-within:outline-primary">
+                    <select
+                      className="bg-fourth text-black w-full rounded"
+                      name="rating"
+                      onChange={(e) =>
+                        setEditedGame({ ...editedGame, rating: e.target.value })
+                      }
+                      value={editedGame.rating}
+                    >
+                      <option selected>Choose Rating</option>
+                      <option value="EVERYONE">EVERYONE</option>
+                      <option value="EVERYONE 10+">EVERYONE 10+</option>
+                      <option value="TEEN">TEEN</option>
+                      <option value="MATURE">MATURE</option>
+                      <option value="ADULTS ONLY">ADULTS ONLY</option>
+                      <option value="RATING PENDING">RATING PENDING</option>
+                      <option value="RATING PENDING-Likely Mature">
+                        RP17+
+                      </option>
+                      <option value="NOT RATED">NOT RATED</option>
+                    </select>
+                  </div>
+
                   <label htmlFor="publisher">Publisher</label>
                   <div className="w-full flex px-2 py-1 bg-fourth  mt-1 mb-2 rounded focus-within:outline focus-within:outline-primary">
                     <input

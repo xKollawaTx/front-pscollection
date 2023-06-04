@@ -127,8 +127,8 @@ const EditRequest = ({ request, onClose }) => {
               onChange={handleOnChange}
               value={data.platform}
             >
-              <option value="PS5">PS5</option>
-              <option value="PS4">PS4</option>
+              <option value="ps5">PS5</option>
+              <option value="ps4">PS4</option>
             </select>
           </div>
           <label htmlFor="genre">Genre</label>

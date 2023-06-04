@@ -1,28 +1,22 @@
-import React, { useState, useEffect } from "react";
-import { HiPlusCircle } from "react-icons/hi";
-import "./Request.css";
-import AddRequest from "../components/AddRequest";
-import EditRequest from "../components/EditRequest";
-import { useSelector } from "react-redux";
-import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
+import axios from "axios";
+import ApproveRequest from "../components/ApproveRequest";
+import { MdOutlineDeleteForever } from "react-icons/md";
 
-const Request = () => {
-  const userData = useSelector((state) => state.user);
-  const [isAddRequestOpen, setIsAddRequestOpen] = useState(false);
-  const [isEditRequestOpen, setIsEditRequestOpen] = useState(false);
-  const [selectedRequest, setSelectedRequest] = useState(null);
+const RequestAdmin = () => {
   const [requests, setRequests] = useState([]);
-  
+  const [showEditPopup, setShowEditPopup] = useState(false);
+  const [selectedRequest, setSelectedRequest] = useState(null);
 
   useEffect(() => {
-    fetchUserRequest();
-  }, [isAddRequestOpen, isEditRequestOpen]);
+    fetchAllRequest();
+  }, []);
 
-  const fetchUserRequest = async () => {
+  const fetchAllRequest = async () => {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_SERVER_URL}/request/user/${userData._id}`
+        `${process.env.REACT_APP_SERVER_URL}/request`
       );
 
       if (!response.ok) {
@@ -36,24 +30,42 @@ const Request = () => {
     }
   };
 
-  const handleAddRequestClick = () => {
-    setIsAddRequestOpen(true);
-  };
-
-  const handleCloseAddRequest = () => {
-    setIsAddRequestOpen(false);
-  };
-
-  const handleEditRequestClick = (request) => {
+  const handleApproveClick = (request) => {
     setSelectedRequest(request);
-    setIsEditRequestOpen(true);
+    setShowEditPopup(true);
   };
 
-  const handleCloseEditRequest = () => {
-    setSelectedRequest(null);
-    setIsEditRequestOpen(false);
-  };
+  const handleDecline = async (requestId) => {
+    try {
+      const response = await axios.put(
+        `${process.env.REACT_APP_SERVER_URL}/updaterequest/${requestId}`,
+        { state: "decline" }
+      );
 
+      if (response.status === 200) {
+        toast.success("Request declined successfully");
+        fetchAllRequest();
+      } else {
+        throw new Error("Error declining request");
+      }
+
+      // Update the state of the request locally
+      const updatedRequests = requests.map((request) => {
+        if (request._id === requestId) {
+          return {
+            ...request,
+            state: "decline",
+          };
+        }
+        return request;
+      });
+
+      setRequests(updatedRequests);
+    } catch (error) {
+      console.error("Error declining request:", error);
+      toast.error("Error declining request");
+    }
+  };
   const handleDeleteRequest = async (requestId) => {
     try {
       await axios.delete(
@@ -69,7 +81,7 @@ const Request = () => {
   return (
     <div>
       <div className="p-3 md:p-4 text-white relative">
-        <h1 className="text-2xl px-24 font-bold">Your Requests</h1>
+        <h1 className="text-2xl px-24 font-bold">All Requests</h1>
         <div className="flex justify-center">
           <div className="flex flex-col items-center w-full max-w-8xl">
             {requests.map((request) => (
@@ -109,47 +121,38 @@ const Request = () => {
                 </div>
                 <div className="flex  md:flex-row items-center gap-4 mt-4 md:mt-0">
                   <button
-                    className="bg-primary text-white px-4 py-2 rounded-md"
-                    onClick={() => handleEditRequestClick(request)}
+                    className="bg-green-700 text-white px-4 py-2 rounded-md"
+                    onClick={() => handleApproveClick(request)}
                   >
-                    Edit
+                    Approve
                   </button>
                   <button
                     className="bg-red-500 text-white px-4 py-2 rounded-md"
-                    onClick={() => handleDeleteRequest(request._id)}
+                    onClick={() => handleDecline(request._id)}
                   >
-                    Delete
+                    Decline
                   </button>
+                  <MdOutlineDeleteForever
+                    size={30}
+                    className="text-red-500 cursor-pointer"
+                    onClick={() => handleDeleteRequest(request._id)}
+                  />
                 </div>
               </div>
             ))}
           </div>
         </div>
-        <div className="fixed bottom-0 right-0 mb-4 mr-4">
-          <HiPlusCircle
-            size={80}
-            className="text-primary"
-            title="Create new request"
-            onClick={handleAddRequestClick}
-          />
-          <span className="tooltiptext">Create new request</span>
-        </div>
-        {isAddRequestOpen && (
-          <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
-            <AddRequest onClose={handleCloseAddRequest} />
-          </div>
-        )}
-        {isEditRequestOpen && selectedRequest && (
-          <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
-            <EditRequest
-              request={selectedRequest}
-              onClose={handleCloseEditRequest}
-            />
-          </div>
-        )}
       </div>
+      {showEditPopup && selectedRequest && (
+        <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50">
+          <ApproveRequest
+            request={selectedRequest}
+            onClose={() => setShowEditPopup(false)}
+          />
+        </div>
+      )}
     </div>
   );
 };
 
-export default Request;
+export default RequestAdmin;
