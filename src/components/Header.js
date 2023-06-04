@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { logoutRedux } from "../redux/userSlice";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -34,10 +35,26 @@ const Header = () => {
     }, 1000);
   };
 
-  const handleSearch = () => {
-    // Implement your search functionality here
-    console.log("Searching for:", searchText);
+  const handleSearch = async () => {
+    try {
+      const res = await axios.get(`${process.env.REACT_APP_SERVER_URL}/game/`);
+      const resData = await res.data;
+      const searchData = resData.filter((game) =>
+        game.name.toLowerCase().includes(searchText.toLowerCase())
+      );
+      console.log(searchData);
+      
+      // Navigate to the search result page and pass searchData as a parameter
+      navigate("/searchresults", { state: { searchData, searchText } },);
+      
+      // Close the search bar
+      setShowSearchBar(false);
+      
+    } catch (error) {
+      console.log(error);
+    }
   };
+
 
   const handleClearSearch = () => {
     setSearchText("");

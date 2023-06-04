@@ -12,6 +12,7 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-hot-toast";
+import { loginRedux } from "../redux/userSlice";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -42,9 +43,6 @@ const Profile = () => {
     setIsCreatingCollection(true);
   };
   //fetch UserData after editing account
-  useEffect(() => {
-    fetchUserData();
-  }, [isEditing]);
   const fetchUserData = async () => {
     try {
       const response = await fetch(
@@ -52,18 +50,19 @@ const Profile = () => {
       );
       if (response.ok) {
         const userData = await response.json();
-        dispatch({
-          type: "SET_USER",
-          payload: userData,
-        });
+        dispatch(loginRedux(userData));
+        console.log(userData);
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
-    console.log(userData);
   };
+   
   const userData = useSelector((state) => state.user);
-
+  useEffect(() => {
+    fetchUserData();
+  }, [userData._id]);
+  console.log(userData);
   useEffect(() => {
     fetchCollections();
   }, [isCreatingCollection]);

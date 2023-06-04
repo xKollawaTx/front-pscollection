@@ -1,27 +1,12 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { BiFilter } from "react-icons/bi";
-import { useSelector } from "react-redux";
 import GameFeature from "../components/GameFeature";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { setDataGame } from "../redux/gameSlide";
-import { useState } from "react";
 
-export const Ps5 = () => {
-  const dispatch = useDispatch();
-  const fetchGameData = useSelector((state) => state.game);
-
-  useEffect(() => {
-    (async () => {
-      const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/game`);
-      const resData = await res.json();
-      dispatch(setDataGame(resData));
-    })();
-  }, []);
-  console.log(fetchGameData);
-  const gameData = useSelector((state) => state.game.gameList);
-  const ps5GameList = gameData.filter((game) => game.platform === "ps5");
+const SearchResultPage = () => {
+  const location = useLocation();
+  const searchData = location.state?.searchData || [];
+  const searchText = location.state?.searchText || "";
   const [showFilter, setShowFilter] = useState(false); // State to track filter visibility
   const [selectedPlatform, setSelectedPlatform] = useState("any");
   const [selectedSortBy, setSelectedSortBy] = useState("");
@@ -48,7 +33,7 @@ export const Ps5 = () => {
     setSelectedRating(e.target.value);
   };
 
-  const filteredData = ps5GameList.filter((game) => {
+  const filteredData = searchData.filter((game) => {
     const platformMatch = selectedPlatform === "any" || game.platform === selectedPlatform;
     const genreMatch = selectedGenre === "" || game.genre === selectedGenre;
     const ratingMatch = selectedRating === "" || game.rating === selectedRating;
@@ -72,15 +57,25 @@ export const Ps5 = () => {
   return (
     <div className="p-2 md:p-4 text-white">
       <div className="px-5 py-5 md:px-20 flex justify-between items-center">
-        <p className="text-2xl md:text-2xl font-bold">
-          PS5 Games<br></br>
+        <p className="text-xl md:text-2xl font-bold">
+          Found {sortedData.length} games matching "{searchText}"
         </p>
-        <BiFilter size={50} className="" onClick={handleFilterClick}/>
+        <BiFilter size={50} className="" onClick={handleFilterClick} />
       </div>
       {showFilter && (
         <div className="p-5 md:p-10 bg-eighth">
           <h2 className="text-lg font-bold mb-3">Filter Options</h2>
           <div className="mb-3">
+            <label className="block mb-1 font-bold">Platform:</label>
+            <select
+              value={selectedPlatform}
+              onChange={handlePlatformChange}
+              className="w-full p-2 border border-third rounded-md bg-fourth text-black"
+            >
+              <option value="any">Any</option>
+              <option value="ps5">PS5</option>
+              <option value="ps4">PS4</option>
+            </select>
           </div>
           <div className="mb-3">
             <label className="block mb-1 font-bold">Sort By:</label>
@@ -138,17 +133,15 @@ export const Ps5 = () => {
           </div>
         </div>
       )}
-      <div className="flex flex-wrap md:gap-5 justify-center">
-        {sortedData.map((game) => {
-          return (
-            <Link to={`/game/${game._id}`}>
-              <GameFeature key={game._id} image={game.image} name={game.name} />
-            </Link>
-          );
-        })}
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-5 mr-10 ml-10">
+        {sortedData.map((game) => (
+          <Link to={`/game/${game._id}`} key={game._id}>
+            <GameFeature image={game.image} name={game.name} />
+          </Link>
+        ))}
       </div>
     </div>
   );
 };
 
-export default Ps5;
+export default SearchResultPage;

@@ -18,6 +18,7 @@ import { Provider } from 'react-redux';
 import Gamedetail from './page/Gamedetail';
 import Request from './page/Request';
 import RequestAdmin from './page/RequestAdmin';
+import SearchResults from './page/SearchResult';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -34,6 +35,7 @@ const router = createBrowserRouter(
       <Route path="game/:id" element={<Gamedetail />} />
       <Route path="Request" element={<Request />} />
       <Route path="RequestAdmin" element={<RequestAdmin />} />
+      <Route path="searchresults" element={<SearchResults />} />
     </Route>
   )
 );
