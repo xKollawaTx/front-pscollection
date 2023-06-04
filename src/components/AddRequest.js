@@ -76,7 +76,7 @@ const AddRequest = ({ onClose }) => {
   return (
     <div className="p-4 text-white max-w-[400px] m-auto bg-eighth border-solid border-2 border-black">
       <div className="rounded text-white  m-auto flex items-center flex-col p-4">
-        <h1 className="text-center text-2xl font-bold mb-5">Add game</h1>
+        <h1 className="text-center text-2xl font-bold mb-5">Request game</h1>
         <label htmlFor="image">
           <div className="h-40 w-[350px] bg-slate-200 rounded flex items-center justify-center cursor-pointer">
             {data.image ? (
@@ -167,14 +167,14 @@ const AddRequest = ({ onClose }) => {
               value={data.rating}
             >
               <option selected>Choose Rating</option>
-              <option value="EVERYONE">E</option>
-              <option value="EVERYONE 10+">E10+</option>
-              <option value="TEEN">T</option>
-              <option value="MATURE">M</option>
-              <option value="ADULTS ONLY">AO</option>
-              <option value="RATING PENDING">RP</option>
+              <option value="EVERYONE">EVERYONE</option>
+              <option value="EVERYONE 10+">EVERYONE 10+</option>
+              <option value="TEEN">TEEN</option>
+              <option value="MATURE">MATURE</option>
+              <option value="ADULTS ONLY">ADULTS ONLY</option>
+              <option value="RATING PENDING">RATING PENDING</option>
               <option value="RATING PENDING-Likely Mature">RP17+</option>
-              <option value="NOT RATED">NR</option>
+              <option value="NOT RATED">NOT RATED</option>
             </select>
           </div>
           <label htmlFor="publisher">Publisher</label>

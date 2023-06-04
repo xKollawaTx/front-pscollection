@@ -3,11 +3,13 @@ import { toast } from "react-hot-toast";
 import axios from "axios";
 import ApproveRequest from "../components/ApproveRequest";
 import { MdOutlineDeleteForever } from "react-icons/md";
+import { BiFilter } from "react-icons/bi";
 
 const RequestAdmin = () => {
   const [requests, setRequests] = useState([]);
   const [showEditPopup, setShowEditPopup] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState(null);
+  const [sortOrder, setSortOrder] = useState("oldToNew");
 
   useEffect(() => {
     fetchAllRequest();
@@ -34,6 +36,18 @@ const RequestAdmin = () => {
     setSelectedRequest(request);
     setShowEditPopup(true);
   };
+
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric",
+    });
+  }
 
   const handleDecline = async (requestId) => {
     try {
@@ -66,6 +80,7 @@ const RequestAdmin = () => {
       toast.error("Error declining request");
     }
   };
+
   const handleDeleteRequest = async (requestId) => {
     try {
       await axios.delete(
@@ -78,13 +93,40 @@ const RequestAdmin = () => {
     }
   };
 
+  const handleSortOrderChange = () => {
+    const newSortOrder = sortOrder === "oldToNew" ? "newToOld" : "oldToNew";
+    setSortOrder(newSortOrder);
+  };
+
+  const sortedRequests = requests.sort((a, b) => {
+    if (sortOrder === "oldToNew") {
+      return new Date(a.createdAt) - new Date(b.createdAt);
+    } else {
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    }
+  });
+
+  const sortOrderText = sortOrder === "oldToNew" ? "Old to New" : "New to Old";
+
   return (
     <div>
       <div className="p-3 md:p-4 text-white relative">
-        <h1 className="text-2xl px-24 font-bold">All Requests</h1>
+        <div className="px-5 py-5 md:px-20 flex justify-between items-center">
+          <p className="text-2xl md:text-2xl font-bold">
+            All request<br></br>
+          </p>
+          <div className="flex items-center">
+            <BiFilter
+              size={50}
+              className="cursor-pointer"
+              onClick={handleSortOrderChange}
+            />
+            <p className="ml-2">{sortOrderText}</p>
+          </div>
+        </div>
         <div className="flex justify-center">
           <div className="flex flex-col items-center w-full max-w-8xl">
-            {requests.map((request) => (
+            {sortedRequests.map((request) => (
               <div
                 key={request._id}
                 className="flex flex-col md:flex-row justify-between items-center w-full rounded-lg shadow-md p-4 mb-4"
@@ -101,6 +143,9 @@ const RequestAdmin = () => {
                     <h1 className="font-bold text-xs">ID: {request._id}</h1>
                     <p className="text-sm">Game: {request.name}</p>
                     <p className="text-sm">Platform: {request.platform}</p>
+                    <p className="text-sm">
+                      CreateDate: {formatDate(request.createdAt)}
+                    </p>
                     <p className="text-sm">
                       Status:{" "}
                       <span
@@ -119,7 +164,7 @@ const RequestAdmin = () => {
                     </p>
                   </div>
                 </div>
-                <div className="flex  md:flex-row items-center gap-4 mt-4 md:mt-0">
+                <div className="flex md:flex-row items-center gap-4 mt-4 md:mt-0">
                   <button
                     className="bg-green-700 text-white px-4 py-2 rounded-md"
                     onClick={() => handleApproveClick(request)}

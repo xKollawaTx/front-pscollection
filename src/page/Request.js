@@ -13,7 +13,6 @@ const Request = () => {
   const [isEditRequestOpen, setIsEditRequestOpen] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [requests, setRequests] = useState([]);
-  
 
   useEffect(() => {
     fetchUserRequest();
@@ -65,6 +64,14 @@ const Request = () => {
       console.error("Error deleting request:", error);
     }
   };
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  }
 
   return (
     <div>
@@ -89,6 +96,9 @@ const Request = () => {
                     <h1 className="font-bold text-xs">ID: {request._id}</h1>
                     <p className="text-sm">Game: {request.name}</p>
                     <p className="text-sm">Platform: {request.platform}</p>
+                    <p className="text-sm">
+                      CreateDate: {formatDate(request.createdAt)}
+                    </p>
                     <p className="text-sm">
                       Status:{" "}
                       <span

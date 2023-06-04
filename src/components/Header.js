@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import logo from "../asset/logo.png";
 import { Link } from "react-router-dom";
-import { FaSearch } from "react-icons/fa";
+import { FaSearch, FaTimes } from "react-icons/fa";
 import profileimg from "../asset/profileimg.png";
 import { useSelector, useDispatch } from "react-redux";
 import { logoutRedux } from "../redux/userSlice";
@@ -12,12 +12,20 @@ const Header = () => {
   const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
   const userData = useSelector((state) => state.user);
-  console.log(userData.username);
   const dispatch = useDispatch();
+  const [showSearchBar, setShowSearchBar] = useState(false);
+  const [searchText, setSearchText] = useState("");
 
   const handleShowMenu = () => {
     setShowMenu((prev) => !prev);
+    setShowSearchBar(false); // Hide the search bar when showing the menu
   };
+
+  const handleShowSearchBar = () => {
+    setShowSearchBar((prev) => !prev);
+    setSearchText(""); // Clear the search text when showing the search bar
+  };
+
   const handleLogout = () => {
     dispatch(logoutRedux());
     toast.success("Sign Out Success");
@@ -26,10 +34,19 @@ const Header = () => {
     }, 1000);
   };
 
+  const handleSearch = () => {
+    // Implement your search functionality here
+    console.log("Searching for:", searchText);
+  };
+
+  const handleClearSearch = () => {
+    setSearchText("");
+  };
+
   return (
     <header className="bg-primary fixed shadow-md w-full h-16 z-50 overflow-visible">
       {/* desktop */}
-      <div className="flex items-center h-full justify-between ">
+      <div className="flex items-center h-full justify-between">
         <div className="flex items-center gap-4 hidden md:flex">
           <Link to={""}>
             <div className="h-16 ml-3">
@@ -37,7 +54,10 @@ const Header = () => {
             </div>
           </Link>
           <div>
-            <FaSearch className="text-white text-2xl" />
+            <FaSearch
+              className="text-white text-2xl"
+              onClick={handleShowSearchBar}
+            />
           </div>
         </div>
         {/* mobile */}
@@ -49,7 +69,10 @@ const Header = () => {
             </div>
           </Link>
           <div className="absolute left-0">
-            <FaSearch className="text-white text-2xl m-3" />
+            <FaSearch
+              className="text-white text-2xl m-3"
+              onClick={handleShowSearchBar}
+            />
           </div>
         </div>
 
@@ -74,9 +97,9 @@ const Header = () => {
               onClick={handleShowMenu}
             >
               {userData.image ? (
-                <img className="w-full h-full" src={userData.image} />
+                <img className="w-full h-full" src={userData.image} alt="Profile" />
               ) : (
-                <img src={profileimg} />
+                <img src={profileimg} alt="Profile" />
               )}
             </div>
             {showMenu && (
@@ -96,10 +119,7 @@ const Header = () => {
                   </Link>
                 )}
                 {userData.email === process.env.REACT_APP_ADMIN_EMAIL && (
-                  <Link
-                    to={"admin"}
-                    className="hover:text-blue-300 px-3 py-1"
-                  >
+                  <Link to={"admin"} className="hover:text-blue-300 px-3 py-1">
                     Admin panel
                   </Link>
                 )}
@@ -150,7 +170,31 @@ const Header = () => {
           </div>
         </div>
       </div>
+      {showSearchBar && (
+        <div className="absolute top-0 left-12 md:left-36 flex bg-fourth w-full md:w-[24rem]  items-center h-full px-3">
+          <input
+            type="text"
+            placeholder="Search for games"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            className="border-solid border-2 border-black bg-fourth rounded-md w-[13.5rem] md:w-full py-1 px-2 focus:outline-none"
+          />
+          {searchText && (
+            <FaTimes
+              className="ml-2 text-gray-500 cursor-pointer"
+              onClick={handleClearSearch}
+            />
+          )}
+          <button
+            className="ml-2 bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md"
+            onClick={handleSearch}
+          >
+            Search
+          </button>
+        </div>
+      )}
     </header>
   );
 };
+
 export default Header;

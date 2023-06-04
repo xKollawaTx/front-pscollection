@@ -8,19 +8,25 @@ import { useDispatch } from "react-redux";
 import { setDataGame } from "../redux/gameSlide";
 
 export const Whatsnew = () => {
-  const dispatch = useDispatch()
-  const fetchGameData = useSelector((state)=>state.game)
-  
-  useEffect(()=>{
-    (async()=>{
-      const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/game`)
-      const resData = await res.json()
-      dispatch(setDataGame(resData))
-    })()
-  },[])
-  console.log(fetchGameData)
+  const dispatch = useDispatch();
+  const fetchGameData = useSelector((state) => state.game);
+
+  useEffect(() => {
+    (async () => {
+      const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/game`);
+      const resData = await res.json();
+      dispatch(setDataGame(resData));
+    })();
+  }, []);
+
   const gameData = useSelector((state) => state.game.gameList);
-  const newGameList = gameData;
+
+  // Create a new array and sort it by dateAdded
+  const newGameList = [...gameData].sort((a, b) => {
+    return new Date(b.dateAdded) - new Date(a.dateAdded);
+  });
+
+  console.log(newGameList);
 
   return (
     <div className="p-2 md:p-4 text-white">
@@ -33,8 +39,8 @@ export const Whatsnew = () => {
       <div className="flex flex-wrap md:gap-5 justify-center">
         {newGameList.map((game) => {
           return (
-            <Link to={`/game/${game._id}`}>
-              <GameFeature key={game._id} image={game.image} name={game.name} />
+            <Link to={`/game/${game._id}`} key={game._id}>
+              <GameFeature image={game.image} name={game.name} />
             </Link>
           );
         })}
