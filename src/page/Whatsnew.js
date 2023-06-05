@@ -7,6 +7,8 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setDataGame } from "../redux/gameSlide";
 import { useState } from "react";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
 
 export const Whatsnew = () => {
   const dispatch = useDispatch();
@@ -31,8 +33,25 @@ export const Whatsnew = () => {
   const [showFilter, setShowFilter] = useState(false); // State to track filter visibility
   const [selectedPlatform, setSelectedPlatform] = useState("any");
   const [selectedSortBy, setSelectedSortBy] = useState("");
-  const [selectedGenre, setSelectedGenre] = useState("");
+  const [selectedGenre, setSelectedGenre] = useState([]);
   const [selectedRating, setSelectedRating] = useState("");
+  const animatedComponents = makeAnimated();
+
+  const options = [
+    { value: "any", label: "Any" }, // Add "Any" option
+    { value: "Action", label: "Action" },
+    { value: "Adventure", label: "Adventure" },
+    { value: "Family", label: "Family" },
+    { value: "Fighting", label: "Fighting" },
+    { value: "Horror", label: "Horror" },
+    { value: "Indy", label: "Indy" },
+    { value: "Platformer", label: "Platformer" },
+    { value: "RPG", label: "Role Playing Games" },
+    { value: "Shooter", label: "Shooter" },
+    { value: "Simulation", label: "Simulation" },
+    { value: "Sports", label: "Sports" },
+    { value: "Strategy", label: "Strategy" },
+  ];
 
   const handleFilterClick = () => {
     setShowFilter(!showFilter);
@@ -46,8 +65,8 @@ export const Whatsnew = () => {
     setSelectedSortBy(e.target.value);
   };
 
-  const handleGenreChange = (e) => {
-    setSelectedGenre(e.target.value);
+  const handleGenreChange = (selectedOptions) => {
+    setSelectedGenre(selectedOptions);
   };
 
   const handleRatingChange = (e) => {
@@ -55,8 +74,14 @@ export const Whatsnew = () => {
   };
 
   const filteredData = newGameList.filter((game) => {
-    const platformMatch = selectedPlatform === "any" || game.platform === selectedPlatform;
-    const genreMatch = selectedGenre === "" || game.genre === selectedGenre;
+    const platformMatch =
+      selectedPlatform === "any" || game.platform === selectedPlatform;
+
+    const genreMatch =
+      selectedGenre.length === 0 ||
+      selectedGenre.some((option) => option.value === "any") ||
+      selectedGenre.some((option) => game.genre.includes(option.value));
+
     const ratingMatch = selectedRating === "" || game.rating === selectedRating;
 
     return platformMatch && genreMatch && ratingMatch;
@@ -111,25 +136,24 @@ export const Whatsnew = () => {
           </div>
           <div className="mb-3">
             <label className="block mb-1 font-bold ">Genre:</label>
-            <select
+            <Select
+              className="w-full p-2 border bg-fourth text-black border-third rounded-md"
+              closeMenuOnSelect={false}
+              components={animatedComponents}
+              isMulti
+              options={options}
+              theme={(theme) => ({
+                ...theme,
+                borderRadius: 0,
+                colors: {
+                  ...theme.colors,
+                  primary25: "#D9D9D9",
+                  primary: "black",
+                },
+              })}
               value={selectedGenre}
               onChange={handleGenreChange}
-              className="w-full p-2 border third rounded-md bg-fourth text-black"
-            >
-              <option value="">Any</option>
-              <option value="Action">Action</option>
-              <option value="Adventure">Adventure</option>
-              <option value="Family">Family</option>
-              <option value="Fighting">Fighting</option>
-              <option value="Horror">Horror</option>
-              <option value="Indy">Indy</option>
-              <option value="Platformer">Platformer</option>
-              <option value="RPG">RPG</option>
-              <option value="Shooter">Shooter</option>
-              <option value="Simulation">Simulation</option>
-              <option value="Sports">Sports</option>
-              <option value="Strategy">Strategy</option>
-            </select>
+            />
           </div>
           <div>
             <label className="block mb-1 font-bold">Rating:</label>

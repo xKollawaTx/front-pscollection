@@ -5,14 +5,15 @@ import { BiShow, BiHide } from "react-icons/bi";
 import { toast } from "react-hot-toast";
 import { ImagetoBase64 } from "../utils/ImagetoBase64";
 import axios from "axios";
+import { updateUser } from "../redux/userSlice"; // Import the action creator
 
 const Editprofile = ({ onClose }) => {
   const userData = useSelector((state) => state.user);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
-  const [email, setEmail] = useState(userData.email); // New state for email
-  const [username, setUsername] = useState(userData.username); // New state for username
+  const [email, setEmail] = useState(userData.email);
+  const [username, setUsername] = useState(userData.username);
   const dispatch = useDispatch();
 
   const handleShowPassword = () => {
@@ -28,25 +29,20 @@ const Editprofile = ({ onClose }) => {
     const password = event.target.password.value;
     const confirmpassword = event.target.confirmpassword.value;
 
-    // Create an empty object to hold the updated values
     const updatedData = {};
 
-    // Check if the email field has been modified
     if (email !== userData.email) {
       updatedData.email = email;
     }
 
-    // Check if the username field has been modified
     if (username !== userData.username) {
       updatedData.username = username;
     }
 
-    // Check if the password field has been modified
     if (password !== "" && password !== userData.password) {
       updatedData.password = password;
     }
 
-    // Check if the confirmPassword field has been modified
     if (
       confirmpassword !== "" &&
       confirmpassword !== userData.confirmpassword
@@ -63,7 +59,6 @@ const Editprofile = ({ onClose }) => {
       }
     }
 
-    // Send a request to update the user profile if any fields have been modified
     if (Object.keys(updatedData).length > 0) {
       try {
         const response = await axios.put(
@@ -71,11 +66,13 @@ const Editprofile = ({ onClose }) => {
           updatedData
         );
 
-        dispatch({ type: "UPDATE_USER", payload: response.data.user });
+        // Dispatch the updateUser action with the updated user data
+        dispatch(updateUser(response.data.user));
+
         if (response.data.message) {
           toast.success(response.data.message);
         } else {
-          toast.error(response.data.error);
+          toast.error(response.data.message);
         }
         onClose();
       } catch (error) {
@@ -83,8 +80,7 @@ const Editprofile = ({ onClose }) => {
         toast.error(error.response.data.message);
       }
     } else {
-      // No fields have been modified, perform necessary actions (e.g., show a message)
-      console.log("No changes made");
+      toast.error("No changes made");
     }
   };
 

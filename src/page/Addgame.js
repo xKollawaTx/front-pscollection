@@ -1,100 +1,102 @@
-import React from "react";
+import React, { useState } from "react";
 import { BiCloudUpload } from "react-icons/bi";
 import { ImagetoBase64 } from "../utils/ImagetoBase64";
-import { useState } from "react";
 import { toast } from "react-hot-toast";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setDataGame } from "../redux/gameSlide";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
+
+const animatedComponents = makeAnimated();
+
+const options = [
+  { value: "Action", label: "Action" },
+  { value: "Adventure", label: "Adventure" },
+  { value: "Family", label: "Family" },
+  { value: "Fighting", label: "Fighting" },
+  { value: "Horror", label: "Horror" },
+  { value: "Indy", label: "Indy" },
+  { value: "Platformer", label: "Platformer" },
+  { value: "RPG", label: "Role Playing Games" },
+  { value: "Shooter", label: "Shooter" },
+  { value: "Simulation", label: "Simulation" },
+  { value: "Sports", label: "Sports" },
+  { value: "Strategy", label: "Strategy" },
+];
 
 const Addgame = () => {
   const [data, setData] = useState({
     image: "",
     name: "",
     platform: "",
-    genre: "",
+    genre: [],
     rating: "",
     publisher: "",
     dateAdded: new Date(),
   });
-  const dispatch = useDispatch();
-  const fetchGameData = useSelector((state) => state.game);
-
-  useEffect(() => {
-    (async () => {
-      const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/game`);
-      const resData = await res.json();
-      dispatch(setDataGame(resData));
-    })();
-  }, []);
-  console.log(fetchGameData);
-
-  const handleOnChange = (e) => {
-    const { name, value } = e.target;
-    setData((preve) => {
-      return {
-        ...preve,
+  
+  const handleOnChange = (selectedGenres) => {
+    if (Array.isArray(selectedGenres)) {
+      const genreValues = selectedGenres.map((genre) => genre.value);
+      setData((prev) => ({
+        ...prev,
+        genre: genreValues,
+      }));
+    } else {
+      const { name, value } = selectedGenres.target;
+      setData((prev) => ({
+        ...prev,
         [name]: value,
-      };
-    });
+      }));
+    }
   };
+  
 
   const uploadImage = async (e) => {
     const data = await ImagetoBase64(e.target.files[0]);
-    // console.log(data);
-    setData((preve) => {
-      return {
-        ...preve,
-        image: data,
-      };
-    });
+    setData((prev) => ({
+      ...prev,
+      image: data,
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(data);
 
     const { image, name, platform, genre, rating, publisher } = data;
 
-    if (image && name && platform && genre && rating && publisher) {
-      setData((preve) => ({
-        ...preve,
+    if (image && name && platform && genre.length > 0 && rating && publisher) {
+      setData((prev) => ({
+        ...prev,
         dateAdded: new Date(),
       }));
 
-      const fetchData = await fetch(
-        `${process.env.REACT_APP_SERVER_URL}/addgame`,
-        {
-          method: "POST",
-          headers: {
-            "content-type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
+      const fetchData = await fetch(`${process.env.REACT_APP_SERVER_URL}/addgame`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
 
       const fetchDataRes = await fetchData.json();
 
       console.log(fetchDataRes);
       toast(fetchDataRes.message);
 
-      setData(() => {
-        return {
-          image: "",
-          name: "",
-          platform: "",
-          genre: "",
-          rating: "",
-          publisher: "",
-          dateAdded: new Date(),
-        };
+      setData({
+        image: "",
+        name: "",
+        platform: "",
+        genre: [],
+        rating: "",
+        publisher: "",
+        dateAdded: new Date(),
       });
-      console.log(setData);
     } else {
       toast.error("Please fill all the fields");
     }
   };
-
   return (
     <div className="p-4 text-white max-w-[500px] m-auto">
       <div className=" rounded text-white  m-auto flex items-center flex-col p-4 border-solid border-2 border-black bg-eighth">
@@ -156,27 +158,27 @@ const Addgame = () => {
           </label>
           <hr className="mb-3"></hr>
           <div className=" w-full mb-2 px-1 py-1 bg-fourth text-black rounded focus-within:outline focus-within:outline-primary">
-            <select
-              className="bg-fourth text-black w-full rounded"
-              name="genre"
-              onChange={handleOnChange}
-              value={data.genre}
-            >
-              <option selected>Choose genre</option>
-              <option value="Action">Action</option>
-              <option value="Adventure">Adventure</option>
-              <option value="Family">Family</option>
-              <option value="Fighting">Fighting</option>
-              <option value="Horror">Horror</option>
-              <option value="Indy">Indy</option>
-              <option value="Platformer">Platformer</option>
-              <option value="Role Playing Games">RPG</option>
-              <option value="Shooter">Shooter</option>
-              <option value="Simulation">Simulation</option>
-              <option value="Sports">Sports</option>
-              <option value="Strategy">Strategy</option>
-            </select>
-          </div>
+          <Select
+            closeMenuOnSelect={false}
+            components={animatedComponents}
+            isMulti
+            options={options}
+            theme={(theme) => ({
+              ...theme,
+              borderRadius: 0,
+              colors: {
+                ...theme.colors,
+                primary25: "#D9D9D9",
+                primary: "black",
+              },
+            })}
+            value={options.filter((option) => data.genre.includes(option.value))}
+            onChange={handleOnChange}
+          />
+        </div>
+        <div>
+          <p>Selected Genres: {data.genre.join(", ")}</p>
+        </div>
           <label className="mb-1" htmlFor="rating">
             Rating
           </label>
@@ -224,5 +226,4 @@ const Addgame = () => {
     </div>
   );
 };
-
 export default Addgame;

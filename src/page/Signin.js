@@ -55,6 +55,7 @@ const Signin = () => {
             if (dataRes.alert === "true") {
                 toast.success(dataRes.message);
                 dispatch(loginRedux(dataRes))
+                
                 setTimeout(() => {
                     navigate("/");
                 }, 1000);

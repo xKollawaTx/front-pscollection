@@ -13,7 +13,7 @@ const RequestAdmin = () => {
 
   useEffect(() => {
     fetchAllRequest();
-  }, []);
+  }, [showEditPopup]);
 
   const fetchAllRequest = async () => {
     try {
@@ -45,7 +45,6 @@ const RequestAdmin = () => {
       day: "numeric",
       hour: "numeric",
       minute: "numeric",
-      second: "numeric",
     });
   }
 
@@ -88,6 +87,7 @@ const RequestAdmin = () => {
       );
       setRequests(requests.filter((request) => request._id !== requestId));
       toast.success("Request deleted successfully");
+      fetchAllRequest();
     } catch (error) {
       console.error("Error deleting request:", error);
     }

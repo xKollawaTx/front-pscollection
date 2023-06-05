@@ -203,7 +203,7 @@ const Header = () => {
             />
           )}
           <button
-            className="ml-2 bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md"
+            className="ml-2 bg-primary hover:bg-blue-600 text-white px-3 py-1 rounded-md"
             onClick={handleSearch}
           >
             Search

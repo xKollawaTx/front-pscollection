@@ -6,6 +6,7 @@ import { ImagetoBase64 } from "../utils/ImagetoBase64";
 import { BiCloudUpload } from "react-icons/bi";
 import { useDispatch } from "react-redux";
 import { setDataGame } from "../redux/gameSlide";
+import GenreSelect from "./GenreSelect";
 
 const DeleteGame = () => {
   const dispatch = useDispatch();
@@ -15,6 +16,7 @@ const DeleteGame = () => {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedGame, setSelectedGame] = useState(null);
   const [editedGame, setEditedGame] = useState(null);
+  const [selectedGenres, setSelectedGenres] = useState([]);
 
   //fetch all games from the database
   useEffect(() => {
@@ -47,6 +49,7 @@ const DeleteGame = () => {
     // Set the selected game and open the edit modal
     setSelectedGame(gameToEdit);
     setEditedGame({ ...gameToEdit }); // Copy the selected game to editedGame state
+    setSelectedGenres(gameToEdit.genre); // Set selected genres
     setEditModalOpen(true); // Add this line to open the edit modal
     console.log("Edit game:", gameId);
   };
@@ -58,6 +61,11 @@ const DeleteGame = () => {
       .delete(`${process.env.REACT_APP_SERVER_URL}/deletegame/${gameId}`)
       .then((res) => {
         toast.success(res.data.message); // Display success message in toast
+        // Update search results by filtering out the deleted game
+        setSearchResults((prevResults) =>
+          prevResults.filter((game) => game._id !== gameId)
+        );
+        handleSearch(); // Trigger search again
       })
       .catch((err) => {
         console.log(err);
@@ -65,22 +73,26 @@ const DeleteGame = () => {
       });
     console.log("Delete game:", gameId);
   };
+
   const handleSave = (event) => {
     event.preventDefault();
+    
+    // Update the genres of the edited game
+    const updatedGame = { ...editedGame, genre: selectedGenres };
+    
     // Perform the logic to save the edited game
     axios
-      .put(
-        `${process.env.REACT_APP_SERVER_URL}/editgame/${editedGame._id}`,
-        editedGame
-      )
+      .put(`${process.env.REACT_APP_SERVER_URL}/editgame/${updatedGame._id}`, updatedGame)
       .then((res) => {
         toast.success(res.data.message);
         setEditModalOpen(false); // Close the edit modal
+        handleSearch();
       })
       .catch((err) => {
         console.log(err);
       });
   };
+  
 
   useEffect(() => {
     (async () => {
@@ -140,7 +152,7 @@ const DeleteGame = () => {
                 </div>
                 <p>id:{game._id}</p>
                 <p>Name: {game.name}</p>
-                <p>Genre: {game.genre}</p>
+                Genre: {game.genre.join(",")}
                 <p>Platform: {game.platform}</p>
                 <p>Publisher: {game.publisher}</p>
                 <p>Date Added: {game.dateAdded}</p>
@@ -240,28 +252,10 @@ const DeleteGame = () => {
                   </div>
                   <label htmlFor="genre">Genre</label>
                   <div className="w-full mb-2 px-1 py-1 bg-fourth text-black rounded focus-within:outline focus-within:outline-primary">
-                    <select
-                      className="bg-fourth text-black w-full rounded"
-                      name="genre"
-                      onChange={(e) =>
-                        setEditedGame({ ...editedGame, genre: e.target.value })
-                      }
-                      value={editedGame.genre}
-                    >
-                      <option selected>Choose genre</option>
-                      <option value="Action">Action</option>
-                      <option value="Adventure">Adventure</option>
-                      <option value="Family">Family</option>
-                      <option value="Fighting">Fighting</option>
-                      <option value="Horror">Horror</option>
-                      <option value="Indy">Indy</option>
-                      <option value="Platformer">Platformer</option>
-                      <option value="Role Playing Games">RPG</option>
-                      <option value="Shooter">Shooter</option>
-                      <option value="Simulation">Simulation</option>
-                      <option value="Sports">Sports</option>
-                      <option value="Strategy">Strategy</option>
-                    </select>
+                    <GenreSelect
+                      selectedGenres={selectedGenres}
+                      setSelectedGenres={setSelectedGenres}
+                    />
                   </div>
                   <label htmlFor="rating">Rating</label>
                   <div className="w-full flex px-1 py-1 bg-fourth  mt-1 mb-2 rounded focus-within:outline focus-within:outline-primary">

@@ -3,9 +3,27 @@ import { BiCloudUpload } from "react-icons/bi";
 import { ImagetoBase64 } from "../utils/ImagetoBase64";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-hot-toast";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
 
 const AddRequest = ({ onClose }) => {
   const dispatch = useDispatch();
+  const animatedComponents = makeAnimated();
+  const options = [
+    { value: "Action", label: "Action" },
+    { value: "Adventure", label: "Adventure" },
+    { value: "Family", label: "Family" },
+    { value: "Fighting", label: "Fighting" },
+    { value: "Horror", label: "Horror" },
+    { value: "Indy", label: "Indy" },
+    { value: "Platformer", label: "Platformer" },
+    { value: "RPG", label: "Role Playing Games" },
+    { value: "Shooter", label: "Shooter" },
+    { value: "Simulation", label: "Simulation" },
+    { value: "Sports", label: "Sports" },
+    { value: "Strategy", label: "Strategy" },
+  ];
+
   const userData = useSelector((state) => state.user);
   console.log(userData._id);
   const [data, setData] = useState({
@@ -13,18 +31,26 @@ const AddRequest = ({ onClose }) => {
     image: "",
     name: "",
     platform: "",
-    genre: "",
+    genre: [],
     rating: "",
     publisher: "",
     state: "wait for approval",
   });
 
-  const handleOnChange = (e) => {
-    const { name, value } = e.target;
-    setData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+  const handleOnChange = (selectedGenres) => {
+    if (Array.isArray(selectedGenres)) {
+      const genreValues = selectedGenres.map((genre) => genre.value);
+      setData((prev) => ({
+        ...prev,
+        genre: genreValues,
+      }));
+    } else {
+      const { name, value } = selectedGenres.target;
+      setData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
   const uploadImage = async (e) => {
@@ -40,7 +66,7 @@ const AddRequest = ({ onClose }) => {
 
     const { image, name, platform, genre, rating, publisher } = data;
 
-    if (image && name && platform && genre && rating && publisher) {
+    if (image && name && platform && genre.length > 0 && rating && publisher) {
       dispatch({ type: "GET_USER_ID" });
 
       const fetchData = await fetch(
@@ -62,7 +88,7 @@ const AddRequest = ({ onClose }) => {
         image: "",
         name: "",
         platform: "",
-        genre: "",
+        genre: [],
         rating: "",
         publisher: "",
         state: "wait for approval",
@@ -72,7 +98,7 @@ const AddRequest = ({ onClose }) => {
       toast.error("Please fill all the fields");
     }
   };
-  
+
   return (
     <div className="p-4 text-white max-w-[400px] m-auto bg-eighth border-solid border-2 border-black">
       <div className="rounded text-white  m-auto flex items-center flex-col p-4">
@@ -104,11 +130,11 @@ const AddRequest = ({ onClose }) => {
           <label htmlFor="gamename">Game name</label>
           <div className="w-full flex px-2 py-1 bg-fourth  mt-1 mb-2 rounded focus-within:outline focus-within:outline-primary">
             <input
-              type={"text"}
+              type="text"
               id="name"
               name="name"
               placeholder="Enter game name"
-              className=" bg-fourth text-black w-full border-none outline-none"
+              className="bg-fourth text-black w-full border-none outline-none"
               onChange={handleOnChange}
               value={data.name}
             />
@@ -124,7 +150,7 @@ const AddRequest = ({ onClose }) => {
               onChange={handleOnChange}
               value={data.platform}
             >
-              <option selected>Choose Platform</option>
+              <option value="">Choose Platform</option>
               <option value="ps5">PS5</option>
               <option value="ps4">PS4</option>
             </select>
@@ -133,34 +159,33 @@ const AddRequest = ({ onClose }) => {
             Genre
           </label>
           <hr className="mb-3"></hr>
-          <div className=" w-full mb-2 px-1 py-1 bg-fourth text-black rounded focus-within:outline focus-within:outline-primary">
-            <select
-              className="bg-fourth text-black w-full rounded"
-              name="genre"
+          <div className="w-full mb-2 px-1 py-1 bg-fourth text-black rounded focus-within:outline focus-within:outline-primary">
+          <Select
+              closeMenuOnSelect={false}
+              components={animatedComponents}
+              isMulti
+              options={options}
+              theme={(theme) => ({
+                ...theme,
+                borderRadius: 0,
+                colors: {
+                  ...theme.colors,
+                  primary25: "#D9D9D9",
+                  primary: "black",
+                },
+              })}
+              value={options.filter((option) =>
+                data.genre.includes(option.value)
+              )}
               onChange={handleOnChange}
-              value={data.genre}
-            >
-              <option selected>Choose Genre</option>
-              <option value="Action">Action</option>
-              <option value="Adventure">Adventure</option>
-              <option value="Family">Family</option>
-              <option value="Fighting">Fighting</option>
-              <option value="Horror">Horror</option>
-              <option value="Indy">Indy</option>
-              <option value="Platformer">Platformer</option>
-              <option value="Role Playing Games">RPG</option>
-              <option value="Shooter">Shooter</option>
-              <option value="Simulation">Simulation</option>
-              <option value="Sports">Sports</option>
-              <option value="Strategy">Strategy</option>
-            </select>
+            />
           </div>
           <label className="mb-1" htmlFor="rating">
             Rating
           </label>
           <hr className="mb-3"></hr>
           <div className="w-full mb-2 px-1 py-1 bg-fourth text-black rounded focus-within:outline focus-within:outline-primary">
-            <select
+          <select
               className="bg-fourth text-black w-full rounded"
               name="rating"
               onChange={handleOnChange}
@@ -180,11 +205,11 @@ const AddRequest = ({ onClose }) => {
           <label htmlFor="publisher">Publisher</label>
           <div className="w-full flex px-2 py-1 bg-fourth  mt-1 mb-2 rounded focus-within:outline focus-within:outline-primary">
             <input
-              type={"text"}
+              type="text"
               id="publisher"
               name="publisher"
               placeholder="Enter publisher"
-              className=" bg-fourth text-black w-full border-none outline-none"
+              className="bg-fourth text-black w-full border-none outline-none"
               onChange={handleOnChange}
               value={data.publisher}
             />

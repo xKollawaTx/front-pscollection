@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { BiPlusCircle } from "react-icons/bi";
 import profileimg from "../asset/profileimg.png";
@@ -9,6 +9,7 @@ import { toast } from "react-hot-toast";
 const Gamedetail = () => {
   const { id: gameID } = useParams();
   const [gameData, setGameData] = useState({});
+  const [userCollection, setUserCollection] = useState([]);
   const userData = useSelector((state) => state.user);
 
   const [isAddtoCollection, setIsAddtoCollection] = useState(false);
@@ -43,8 +44,29 @@ const Gamedetail = () => {
       }
     };
 
+    const fetchUserCollection = async () => {
+      try {
+        // Fetch user collection data based on the gameID
+        const response = await fetch(
+          `${process.env.REACT_APP_SERVER_URL}/collection/game/${gameID}`
+        );
+        const data = await response.json();
+
+        const mappedDataUser = data.map((item) => item.user);
+        setUserCollection(mappedDataUser);
+      } catch (error) {
+        console.log(error);
+      }
+    };
     fetchGameData();
+    fetchUserCollection();
   }, [gameID]);
+
+  const uniqueUsernames = [
+    ...new Set(userCollection.map((user) => user.username)),
+  ];
+  console.log(uniqueUsernames);
+  console.log(userCollection);
 
   function formatDate(dateString) {
     const date = new Date(dateString);
@@ -54,6 +76,7 @@ const Gamedetail = () => {
       day: "numeric",
     });
   }
+
   return (
     <div className="p-2 md:p-4 text-white">
       <div className="md:flex">
@@ -75,7 +98,7 @@ const Gamedetail = () => {
 
         <div className="px-10 md:px-[350px]">
           <p className="text-sm py-2 mt-4 md:text-xl md:mr-auto font-bold text-left">
-            Genre: {gameData.genre}
+            Genre: {gameData.genre ? gameData.genre.join(", ") : ""}
           </p>
           <p className="text-sm py-2 md:text-xl md:mr-auto font-bold text-left">
             Rating: {gameData.rating}
@@ -114,35 +137,51 @@ const Gamedetail = () => {
       <div>
         <hr className="mt-5 mr-10 ml-10"></hr>
         <p className="mt-4 ml-10 md:ml-16 text-left text-sm md:text-2xl font-bold">
-          User have this game in their collection
+          Users who have this game in their collection
         </p>
       </div>
-      <div className="flex items-center justify-between py-2 ml-8 mr-8 md:ml-14 md:mr-14">
-        <div className="bg-tenth w-full rounded-lg border-solid border-4 border-eleventh">
-          <div className="flex px-6 h-24">
-            <div className=" mt-2 w-20 h-20 overflow-hidden rounded-full cursor-pointer">
-              {userData.image ? (
-                <img
-                  className="w-full h-full"
-                  src={userData.image}
-                  alt={userData.username}
-                />
-              ) : (
-                <img
-                  src={profileimg}
-                  alt="Default Profile"
-                  className="w-full h-full"
-                />
-              )}
+      <div className="flex-col items-center justify-between py-2 ml-5 mr-5 md:ml-14 md:mr-14">
+        {uniqueUsernames.map((username) => {
+          const user = userCollection.find(
+            (user) => user.username === username
+          );
+          const isCurrentUser = userData.username === user.username;
+          const profileLink = isCurrentUser ? "/profile" : `/user/${user.username}`;
+          return (
+            <div
+              key={user._id}
+              className="bg-tenth w-full mb-3 rounded-lg border-solid border-4 border-eleventh"
+            >
+              <div className="flex px-6 h-24">
+                <Link to={profileLink}>
+                  <div className="mr-2 md:mr-0 mt-3 md:mt-2 w-[70px] h-[70px] md:w-20 md:h-20 overflow-hidden rounded-full cursor-pointer">
+                    {user.image ? (
+                      <img
+                        className="w-full h-full"
+                        src={user.image}
+                        alt={user.username}
+                      />
+                    ) : (
+                      <img
+                        src={profileimg}
+                        alt="Default Profile"
+                        className="w-full"
+                      />
+                    )}
+                  </div>
+                </Link>
+                <div className="ml-4 mt-2 md:mt-4">
+                  <p className="text-xl font-bold">{user.username}</p>
+                  <p className="text-2sm">
+                    {isCurrentUser
+                      ? "have this game in your collection"
+                      : "have this game in their collection"}
+                  </p>
+                </div>
+              </div>
             </div>
-            <div className="ml-4 mt-4">
-              <p className="text-2xl font-bold">{userData.username}</p>
-              <p className="text-2sm">
-                Add to collection date: {formatDate(gameData.dateAdded)}
-              </p>
-            </div>
-          </div>
-        </div>
+          );
+        })}
       </div>
     </div>
   );

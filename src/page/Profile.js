@@ -15,53 +15,23 @@ import { toast } from "react-hot-toast";
 import { loginRedux } from "../redux/userSlice";
 
 const Profile = () => {
-  const dispatch = useDispatch();
   const [isEditing, setIsEditing] = useState(false);
   const [selectedCollection, setSelectedCollection] = useState(null);
   const [isCreatingCollection, setIsCreatingCollection] = useState(false);
   const [collections, setCollections] = useState([]);
   const [collectionGames, setCollectionGames] = useState({});
   const [showDeleteGamePopup, setShowDeleteGamePopup] = useState(false);
-  const [selectedGame, setSelectedGame] = useState(null);
   const [selectedGames, setSelectedGames] = useState([]);
+  const userData = useSelector((state) => state.user);
   const handleDeleteGamePopup = () => {
     setShowDeleteGamePopup(true);
   };
 
-  const handleEditAccount = () => {
-    setIsEditing(false);
-  };
 
   const handleCreateCollection = (collectionName) => {
-    // Perform the necessary actions to create the collection
-    // For example, make an API request to the backend
-
-    // Close the pop-up
     setIsCreatingCollection(false);
   };
-  const handleCreateCollectionClick = () => {
-    setIsCreatingCollection(true);
-  };
-  //fetch UserData after editing account
-  const fetchUserData = async () => {
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_SERVER_URL}/user/${userData._id}`
-      );
-      if (response.ok) {
-        const userData = await response.json();
-        dispatch(loginRedux(userData));
-        console.log(userData);
-      }
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-    }
-  };
-   
-  const userData = useSelector((state) => state.user);
-  useEffect(() => {
-    fetchUserData();
-  }, [userData._id]);
+
   console.log(userData);
   useEffect(() => {
     fetchCollections();
@@ -119,9 +89,6 @@ const Profile = () => {
       console.error("Error fetching collections:", error);
     }
   };
-  //showselectedcollectionid
-  console.log(selectedCollection);
-  console.log(selectedGame);
   const handleSelectCollection = (collectionId) => {
     setSelectedCollection(collectionId);
   };

@@ -3,10 +3,27 @@ import { BiCloudUpload } from "react-icons/bi";
 import { ImagetoBase64 } from "../utils/ImagetoBase64";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-hot-toast";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
 
 const EditRequest = ({ request, onClose }) => {
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.user);
+  const animatedComponents = makeAnimated();
+  const options = [
+    { value: "Action", label: "Action" },
+    { value: "Adventure", label: "Adventure" },
+    { value: "Family", label: "Family" },
+    { value: "Fighting", label: "Fighting" },
+    { value: "Horror", label: "Horror" },
+    { value: "Indy", label: "Indy" },
+    { value: "Platformer", label: "Platformer" },
+    { value: "RPG", label: "Role Playing Games" },
+    { value: "Shooter", label: "Shooter" },
+    { value: "Simulation", label: "Simulation" },
+    { value: "Sports", label: "Sports" },
+    { value: "Strategy", label: "Strategy" },
+  ];
 
   const [data, setData] = useState({
     user: userData._id,
@@ -32,12 +49,20 @@ const EditRequest = ({ request, onClose }) => {
     });
   }, [request, userData._id]);
 
-  const handleOnChange = (e) => {
-    const { name, value } = e.target;
-    setData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+  const handleOnChange = (selectedGenres) => {
+    if (Array.isArray(selectedGenres)) {
+      const genreValues = selectedGenres.map((genre) => genre.value);
+      setData((prev) => ({
+        ...prev,
+        genre: genreValues,
+      }));
+    } else {
+      const { name, value } = selectedGenres.target;
+      setData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
   const uploadImage = async (e) => {
@@ -79,7 +104,7 @@ const EditRequest = ({ request, onClose }) => {
   return (
     <div className="p-4 text-white max-w-[400px] m-auto bg-eighth border-solid border-2 border-black">
       <div className="rounded text-white  m-auto flex items-center flex-col p-4">
-        <h1 className="text-center text-2xl font-bold mb-5">Edit Game</h1>
+        <h1 className="text-center text-2xl font-bold mb-5">Edit Request</h1>
         <label htmlFor="image">
           <div className="h-40 w-[350px] bg-slate-200 rounded flex items-center justify-center cursor-pointer">
             {data.image ? (
@@ -132,28 +157,26 @@ const EditRequest = ({ request, onClose }) => {
             </select>
           </div>
           <label htmlFor="genre">Genre</label>
-          <div className="w-full flex px-2 py-1 bg-fourth  mt-1 mb-2 rounded focus-within:outline focus-within:outline-primary">
-            <select
-              className="bg-fourth text-black w-full border-none outline-none"
-              name="genre"
-              id="genre"
+          <div className="w-full mb-2 px-1 py-1 bg-fourth text-black rounded focus-within:outline focus-within:outline-primary">
+          <Select
+              closeMenuOnSelect={false}
+              components={animatedComponents}
+              isMulti
+              options={options}
+              theme={(theme) => ({
+                ...theme,
+                borderRadius: 0,
+                colors: {
+                  ...theme.colors,
+                  primary25: "#D9D9D9",
+                  primary: "black",
+                },
+              })}
+              value={options.filter((option) =>
+                data.genre.includes(option.value)
+              )}
               onChange={handleOnChange}
-              value={data.genre}
-            >
-              <option selected>Choose genre</option>
-              <option value="Action">Action</option>
-              <option value="Adventure">Adventure</option>
-              <option value="Family">Family</option>
-              <option value="Fighting">Fighting</option>
-              <option value="Horror">Horror</option>
-              <option value="Indy">Indy</option>
-              <option value="Platformer">Platformer</option>
-              <option value="Role Playing Games">RPG</option>
-              <option value="Shooter">Shooter</option>
-              <option value="Simulation">Simulation</option>
-              <option value="Sports">Sports</option>
-              <option value="Strategy">Strategy</option>
-            </select>
+            />
           </div>
           <label htmlFor="rating">Rating</label>
           <div className="w-full flex px-2 py-1 bg-fourth  mt-1 mb-2 rounded focus-within:outline focus-within:outline-primary">
