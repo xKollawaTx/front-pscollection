@@ -176,9 +176,6 @@ const Addgame = () => {
             onChange={handleOnChange}
           />
         </div>
-        <div>
-          <p>Selected Genres: {data.genre.join(", ")}</p>
-        </div>
           <label className="mb-1" htmlFor="rating">
             Rating
           </label>
@@ -195,10 +192,7 @@ const Addgame = () => {
               <option value="EVERYONE 10+">EVERYONE 10+</option>
               <option value="TEEN">TEEN</option>
               <option value="MATURE">MATURE</option>
-              <option value="ADULTS ONLY">ADULTS ONLY</option>
               <option value="RATING PENDING">RATING PENDING</option>
-              <option value="RATING PENDING-Likely Mature">RP17+</option>
-              <option value="NOT RATED">NOT RATED</option>
             </select>
           </div>
           <label htmlFor="publisher">Publisher</label>

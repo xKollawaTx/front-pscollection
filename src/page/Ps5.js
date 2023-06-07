@@ -24,6 +24,9 @@ export const Ps5 = () => {
   console.log(fetchGameData);
   const gameData = useSelector((state) => state.game.gameList);
   const ps5GameList = gameData.filter((game) => game.platform === "ps5");
+  ps5GameList.sort((a, b) => {
+    return new Date(b.dateAdded) - new Date(a.dateAdded);
+  });
   const [showFilter, setShowFilter] = useState(false); // State to track filter visibility
   const [selectedPlatform, setSelectedPlatform] = useState("any");
   const [selectedSortBy, setSelectedSortBy] = useState("");
@@ -155,16 +158,13 @@ export const Ps5 = () => {
               <option value="EVERYONE">EVERYONE</option>
               <option value="EVERYONE 10+">EVERYONE 10+</option>
               <option value="TEEN">TEEN</option>
-              <option value="MATURE">MATURE</option>
               <option value="ADULTS ONLY">ADULTS ONLY</option>
               <option value="RATING PENDING">RATING PENDING</option>
-              <option value="RATING PENDING-Likely Mature">RP17+</option>
-              <option value="NOT RATED">NOT RATED</option>
             </select>
           </div>
         </div>
       )}
-      <div className="flex flex-wrap md:gap-5 justify-center">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-1 mx-10">
         {sortedData.map((game) => {
           return (
             <Link to={`/game/${game._id}`}>

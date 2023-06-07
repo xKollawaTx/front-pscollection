@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import logo from "../asset/logo.png";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { FaSearch, FaTimes } from "react-icons/fa";
 import profileimg from "../asset/profileimg.png";
 import { useSelector, useDispatch } from "react-redux";
@@ -10,12 +10,17 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Header = () => {
+  const location = useLocation();
   const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
   const userData = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const [showSearchBar, setShowSearchBar] = useState(false);
   const [searchText, setSearchText] = useState("");
+
+  useEffect(() => {
+    setShowMenu(false);
+  }, [navigate]);
 
   const handleShowMenu = () => {
     setShowMenu((prev) => !prev);
@@ -34,7 +39,9 @@ const Header = () => {
       navigate("/");
     }, 1000);
   };
-
+  useEffect(() => {
+    setShowMenu(false); // Close the menu when the location changes
+  }, [location]);
   const handleSearch = async () => {
     try {
       const res = await axios.get(`${process.env.REACT_APP_SERVER_URL}/game/`);
@@ -43,18 +50,16 @@ const Header = () => {
         game.name.toLowerCase().includes(searchText.toLowerCase())
       );
       console.log(searchData);
-      
+
       // Navigate to the search result page and pass searchData as a parameter
-      navigate("/searchresults", { state: { searchData, searchText } },);
-      
+      navigate("/searchresults", { state: { searchData, searchText } });
+
       // Close the search bar
       setShowSearchBar(false);
-      
     } catch (error) {
       console.log(error);
     }
   };
-
 
   const handleClearSearch = () => {
     setSearchText("");
@@ -95,16 +100,16 @@ const Header = () => {
 
         <div className="flex items-center">
           <nav className="text-white gap-4 md:text-lg hidden md:flex">
-            <Link to={""} className="">
+            <Link to={""} className="hover:underline">
               Home
             </Link>
-            <Link to={"whatsnew"} className="">
+            <Link to={"whatsnew"} className="hover:underline">
               What's New
             </Link>
-            <Link to={"ps5"} className="">
+            <Link to={"ps5"} className="hover:underline">
               PS5
             </Link>
-            <Link to={"ps4"} className="">
+            <Link to={"ps4"} className="hover:underline">
               PS4
             </Link>
           </nav>
@@ -114,7 +119,11 @@ const Header = () => {
               onClick={handleShowMenu}
             >
               {userData.image ? (
-                <img className="w-full h-full" src={userData.image} alt="Profile" />
+                <img
+                  className="w-full h-full"
+                  src={userData.image}
+                  alt="Profile"
+                />
               ) : (
                 <img src={profileimg} alt="Profile" />
               )}

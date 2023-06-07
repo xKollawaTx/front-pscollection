@@ -159,7 +159,7 @@ const SearchResultPage = () => {
           </div>
         </div>
       )}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-5 mr-10 ml-10">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-1 mx-10">
         {sortedData.map((game) => (
           <Link to={`/game/${game._id}`} key={game._id}>
             <GameFeature image={game.image} name={game.name} />

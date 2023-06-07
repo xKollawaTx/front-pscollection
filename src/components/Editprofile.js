@@ -188,9 +188,11 @@ const Editprofile = ({ onClose }) => {
         >
           Comfirm
         </button>
-        <p className="text-primary underline" onClick={onClose}>
+        <div className="justify-end flex mt-2">
+        <p className="text-primary text-xl font-bold underline mt-2 cursor-pointer hover:text-red-500" onClick={onClose}>
           Cancel
         </p>
+        </div>
       </form>
     </div>
   );

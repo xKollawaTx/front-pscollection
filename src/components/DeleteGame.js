@@ -56,23 +56,34 @@ const DeleteGame = () => {
 
   const handleDelete = (event, gameId) => {
     event.preventDefault();
-    // Delete game using the gameId to delete the game from the database
+  
+    // Delete the game from the "game" collection
     axios
       .delete(`${process.env.REACT_APP_SERVER_URL}/deletegame/${gameId}`)
       .then((res) => {
-        toast.success(res.data.message); // Display success message in toast
-        // Update search results by filtering out the deleted game
+        toast.success(res.data.message);
         setSearchResults((prevResults) =>
           prevResults.filter((game) => game._id !== gameId)
         );
-        handleSearch(); // Trigger search again
+  
+        // Delete the game ID from all collections that have it in their "gameIds" array
+        axios
+          .put(`${process.env.REACT_APP_SERVER_URL}/collection/deletegame/${gameId}`)
+          .then((res) => {
+            // toast.success('Game deleted from collections');
+            handleSearch();
+          })
+          .catch((err) => {
+            console.log(err);
+            // toast.success("Game deleted from collections");
+          });
       })
       .catch((err) => {
         console.log(err);
-        toast.error("Failed to delete game"); // Display error message in toast
+        toast.error("Failed to delete game");
       });
-    console.log("Delete game:", gameId);
   };
+  
 
   const handleSave = (event) => {
     event.preventDefault();
@@ -156,15 +167,15 @@ const DeleteGame = () => {
                 <p>Platform: {game.platform}</p>
                 <p>Publisher: {game.publisher}</p>
                 <p>Date Added: {game.dateAdded}</p>
-                <div className="flex justify-center mt-2">
+                <div className="flex justify-center mt-2 gap-2">
                   <button
-                    className="p-2 bg-green-500 text-white rounded mr-2"
+                    className="w-full max-w-[80px] bg-sixth hover:bg-primary cursor-pointer  text-black text-xl font-bold text-center rounded-full "
                     onClick={() => handleEdit(game._id)}
                   >
                     Edit
                   </button>
                   <button
-                    className="p-2 bg-red-500 text-white rounded"
+                    className="w-full max-w-[80px] bg-sixth hover:bg-red-500 text-black text-xl font-bold text-center rounded-full"
                     onClick={(event) => handleDelete(event, game._id)}
                   >
                     Delete
@@ -177,7 +188,7 @@ const DeleteGame = () => {
           )}
           {editModalOpen && selectedGame && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-              <div className="bg-eighth p-4 min-w-[350px] min-h-[400px] md:min-w-[500px] md:h-[510px] rounded-lg">
+              <div className="bg-eighth p-4 min-w-[350px] min-h-[400px] md:min-w-[500px] md:h-[650px] rounded-lg">
                 <h2 className="text-xl text-center font-bold mb-2">
                   Edit Game
                 </h2>
@@ -271,13 +282,8 @@ const DeleteGame = () => {
                       <option value="EVERYONE">EVERYONE</option>
                       <option value="EVERYONE 10+">EVERYONE 10+</option>
                       <option value="TEEN">TEEN</option>
-                      <option value="MATURE">MATURE</option>
                       <option value="ADULTS ONLY">ADULTS ONLY</option>
                       <option value="RATING PENDING">RATING PENDING</option>
-                      <option value="RATING PENDING-Likely Mature">
-                        RP17+
-                      </option>
-                      <option value="NOT RATED">NOT RATED</option>
                     </select>
                   </div>
 
@@ -299,19 +305,21 @@ const DeleteGame = () => {
                     />
                   </div>
 
-                  <div className="flex justify-center">
+                  <div className="flex justify-center mt-1">
                     <button
                       type="submit"
-                      className="px-4 py-2 bg-blue-500 text-white rounded"
+                      className="w-full max-w-[150px] m-auto  bg-sixth hover:bg-primary cursor-pointer  text-black text-xl font-bold text-center py-1 rounded-full mt-4"
                     >
                       Save
                     </button>
+                  </div>
+                  <div className="flex justify-end">
                     <button
                       type="button"
                       onClick={() => setEditModalOpen(false)}
-                      className="ml-2 px-4 py-2 bg-gray-500 text-white rounded"
+                      className="text-primary text-xl font-bold underline mt-2 cursor-pointer hover:text-red-500"
                     >
-                      Close
+                      Cancel
                     </button>
                   </div>
                 </form>

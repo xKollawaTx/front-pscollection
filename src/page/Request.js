@@ -121,13 +121,13 @@ const Request = () => {
                 </div>
                 <div className="flex  md:flex-row items-center gap-4 mt-4 md:mt-0">
                   <button
-                    className="bg-primary text-white px-4 py-2 rounded-md"
+                    className="w-[80px] bg-sixth hover:bg-primary text-black text-xl font-bold text-center rounded-full"
                     onClick={() => handleEditRequestClick(request)}
                   >
                     Edit
                   </button>
                   <button
-                    className="bg-red-500 text-white px-4 py-2 rounded-md"
+                    className="w-[80px] bg-sixth hover:bg-red-500 text-black text-xl font-bold text-center rounded-full"
                     onClick={() => handleDeleteRequest(request._id)}
                   >
                     Delete

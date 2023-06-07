@@ -8,6 +8,8 @@ import {
   AccordionBody,
 } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 function Icon({ id, open }) {
   return (
@@ -27,7 +29,14 @@ function Icon({ id, open }) {
 }
 
 const Admin = () => {
+  const navigate = useNavigate();
+  //if don't admin, redirect to home
+  const userData = useSelector((state) => state.user);
+  if (!userData._id) {
+    navigate("/");
+  }
   const [open, setOpen] = useState(0);
+  
 
   const handleOpen = (value) => {
     setOpen(open === value ? 0 : value);
@@ -44,18 +53,13 @@ const Admin = () => {
         <p className="px-3 text-2xl py-4 font-bold">All Requests</p>
         </Link>
       </div>
+      <div className="bg-tenth rounded mb-5 h-[70px] border-solid border-4 border-eleventh"
+      >
+        <Link to="/addgame">
+        <p className="px-3 text-2xl py-4 font-bold">Addgame</p>
+        </Link>
+      </div>
       <Fragment className="">
-        <Accordion open={open === 1} icon={<Icon id={1} open={open} />}>
-          <AccordionHeader
-            className="bg-tenth rounded mb-5 border-solid border-4 border-eleventh"
-            onClick={() => handleOpen(1)}
-          >
-            <p className="px-3 text-2xl">Add game</p>
-          </AccordionHeader>
-          <AccordionBody>
-            <Addgame />
-          </AccordionBody>
-        </Accordion>
         <Accordion open={open === 2} icon={<Icon id={2} open={open} />}>
           <AccordionHeader
             className="bg-tenth rounded mb-5 border-solid border-4 border-eleventh"

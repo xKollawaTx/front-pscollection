@@ -164,22 +164,22 @@ const RequestAdmin = () => {
                     </p>
                   </div>
                 </div>
-                <div className="flex md:flex-row items-center gap-4 mt-4 md:mt-0">
+                <div className="flex  md:flex-row items-center gap-4 mt-4 md:mt-0">
                   <button
-                    className="bg-green-700 text-white px-4 py-2 rounded-md"
+                    className="w-[100px] bg-sixth hover:bg-primary text-black text-xl font-bold text-center rounded-full"
                     onClick={() => handleApproveClick(request)}
                   >
                     Approve
                   </button>
                   <button
-                    className="bg-red-500 text-white px-4 py-2 rounded-md"
+                    className="w-[100px] bg-sixth hover:bg-red-500 text-black text-xl font-bold text-center rounded-full"
                     onClick={() => handleDecline(request._id)}
                   >
                     Decline
                   </button>
                   <MdOutlineDeleteForever
-                    size={30}
-                    className="text-red-500 cursor-pointer"
+                    size={40}
+                    className="text-sixth hover:text-red-500 cursor-pointer"
                     onClick={() => handleDeleteRequest(request._id)}
                   />
                 </div>

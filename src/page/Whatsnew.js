@@ -132,6 +132,8 @@ export const Whatsnew = () => {
               <option value="">None</option>
               <option value="name-asc">Name (A-Z)</option>
               <option value="name-desc">Name (Z-A)</option>
+              <option value="date-added-new-old">Date Added (New-Old)</option>
+              <option value="date-added-old-new">Date Added (Old-New)</option>
             </select>
           </div>
           <div className="mb-3">
@@ -166,16 +168,13 @@ export const Whatsnew = () => {
               <option value="EVERYONE">EVERYONE</option>
               <option value="EVERYONE 10+">EVERYONE 10+</option>
               <option value="TEEN">TEEN</option>
-              <option value="MATURE">MATURE</option>
               <option value="ADULTS ONLY">ADULTS ONLY</option>
               <option value="RATING PENDING">RATING PENDING</option>
-              <option value="RATING PENDING-Likely Mature">RP17+</option>
-              <option value="NOT RATED">NOT RATED</option>
             </select>
           </div>
         </div>
       )}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-1 mr-10 ml-10">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-1 mx-10">
         {sortedData.map((game) => {
           return (
             <Link to={`/game/${game._id}`} key={game._id}>

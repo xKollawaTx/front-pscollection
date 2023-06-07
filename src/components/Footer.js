@@ -30,7 +30,7 @@ const Footer = () => {
         <div class="sm:flex sm:items-center sm:justify-between">
           <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">
             <a class="dark:hover:text-white">
-              PScollection develop by Kollawat Ruanghirun
+              PScollection create by Kollawat Ruanghirun
             </a>
           </span>
           <div class="flex mt-4 space-x-6 sm:justify-center sm:mt-0">

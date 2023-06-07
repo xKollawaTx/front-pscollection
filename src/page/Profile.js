@@ -22,11 +22,11 @@ const Profile = () => {
   const [collectionGames, setCollectionGames] = useState({});
   const [showDeleteGamePopup, setShowDeleteGamePopup] = useState(false);
   const [selectedGames, setSelectedGames] = useState([]);
-  const userData = useSelector((state) => state.user);
+  const userData = useSelector((state) => state.user) || {};
+  console.log(userData);
   const handleDeleteGamePopup = () => {
     setShowDeleteGamePopup(true);
   };
-
 
   const handleCreateCollection = (collectionName) => {
     setIsCreatingCollection(false);
@@ -167,21 +167,26 @@ const Profile = () => {
         {/* Button to select collection */}
         {collections.length > 0 && (
           <div className="flex justify-center mt-4">
-            <div className="max-w-screen-lg overflow-x-auto">
-              <div className="flex gap-4 text-black">
-                {collections.map((collection) => (
-                  <button
-                    key={collection._id}
-                    className={`px-4 py-2 rounded-full mt-3  ${
-                      selectedCollection === collection._id
-                        ? "bg-primary"
-                        : "bg-sixth"
-                    }`}
-                    onClick={() => handleSelectCollection(collection._id)}
-                  >
-                    {collection.name}
-                  </button>
-                ))}
+            <div className="max-w-screen-lg">
+              <div className="flex flex-wrap gap-4 text-black">
+                {collections.map((collection) => {
+                  if (collection && collection._id) {
+                    return (
+                      <button
+                        key={collection._id}
+                        className={`px-4 py-2 rounded-full mt-3 ${
+                          selectedCollection === collection._id
+                            ? "bg-primary"
+                            : "bg-sixth"
+                        }`}
+                        onClick={() => handleSelectCollection(collection._id)}
+                      >
+                        {collection.name}
+                      </button>
+                    );
+                  }
+                  return null;
+                })}
               </div>
             </div>
           </div>
@@ -200,7 +205,9 @@ const Profile = () => {
                         {collection.name}
                       </p>
                       <div className="flex gap-1">
-                        <BiFilter size={50} className="" />
+                        <span className="mt-4">
+                          {collectionGames[collection._id].length} games
+                        </span>
                         <MdOutlineDeleteForever
                           size={50}
                           className=""
@@ -208,25 +215,28 @@ const Profile = () => {
                         />
                       </div>
                     </div>
-                    {collectionGames[collection._id] &&
-                    collectionGames[collection._id].length > 0 ? (
-                      <div className="flex gap-1">
-                        <div className="flex flex-wrap md:gap-5 justify-center">
-                          {collectionGames[collection._id].map((game) => (
-                            <Link to={`/game/${game._id}`}>
-                              <GameFeature
-                                key={game._id}
-                                image={game.image}
-                                name={game.name}
-                              />
-                            </Link>
-                          ))}
+                    {collectionGames[collection._id] ? (
+                      collectionGames[collection._id].length > 0 ? (
+                        <div className="flex gap-1">
+                          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-1 mx-10">
+                            {collectionGames[collection._id].map((game) => (
+                              <Link to={`/game/${game._id}`} key={game._id}>
+                                <GameFeature
+                                  key={game._id}
+                                  image={game.image}
+                                  name={game.name}
+                                />
+                              </Link>
+                            ))}
+                          </div>
                         </div>
-                      </div>
+                      ) : (
+                        <p className="px-5 py-5 md:px-20 flex justify-between items-center">
+                          You don't have games in this collection
+                        </p>
+                      )
                     ) : (
-                      <p className="px-5 py-5 md:px-20 flex justify-between items-center">
-                        You don't have games in this collection
-                      </p>
+                      <p>Loading games...</p>
                     )}
                     {/* show games in collection */}
                   </div>
@@ -265,17 +275,17 @@ const Profile = () => {
             </div>
             <div className="flex justify-end mt-4">
               <button
-                className="px-4 py-2 text-primary underline rounded-md mr-2"
-                onClick={() => setShowDeleteGamePopup(false)}
-              >
-                Cancel
-              </button>
-              <button
-                className="px-4 py-2 bg-red-500 text-white rounded-md"
+                className="px-4 py-2 bg-primary hover:bg-red-500 text-white rounded-full"
                 onClick={handleDeleteGame}
               >
                 Delete
               </button>
+              <p
+                className="px-4 py-2 text-primary underline rounded-md mr-2 hover:text-red-500"
+                onClick={() => setShowDeleteGamePopup(false)}
+              >
+                Cancel
+              </p>
             </div>
           </div>
         </div>

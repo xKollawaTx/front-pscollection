@@ -75,12 +75,12 @@ const ApproveRequest = ({ request, onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     const { image, name, platform, genre, rating, publisher } = data;
-  
+
     if (image && name && platform && genre && rating && publisher) {
       dispatch({ type: "GET_USER_ID" });
-  
+
       // Update request
       const updateRequestResponse = await fetch(
         `${process.env.REACT_APP_SERVER_URL}/updaterequest/${request._id}`,
@@ -89,23 +89,29 @@ const ApproveRequest = ({ request, onClose }) => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ ...data, userId: userData._id, state: "approved" }),
+          body: JSON.stringify({
+            ...data,
+            userId: userData._id,
+            state: "approved",
+          }),
         }
       );
       const updateRequestData = await updateRequestResponse.json();
       toast.success("Request approved");
-  
+
       // Add game
-      const addGameResponse = await fetch(`${process.env.REACT_APP_SERVER_URL}/addgame`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ...data, userId: userData._id }),
-      });
+      const addGameResponse = await fetch(
+        `${process.env.REACT_APP_SERVER_URL}/addgame`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ ...data, userId: userData._id }),
+        }
+      );
       const addGameData = await addGameResponse.json();
-      toast.success(addGameData.message);
-  
+      toast.success("Game added to the database");
       onClose(); // Close the component
     } else {
       toast.error("Please fill all the fields");
@@ -169,7 +175,7 @@ const ApproveRequest = ({ request, onClose }) => {
           </div>
           <label htmlFor="genre">Genre</label>
           <div className="w-full mb-2 px-1 py-1 bg-fourth text-black rounded focus-within:outline focus-within:outline-primary">
-          <Select
+            <Select
               closeMenuOnSelect={false}
               components={animatedComponents}
               isMulti
@@ -202,11 +208,8 @@ const ApproveRequest = ({ request, onClose }) => {
               <option value="EVERYONE">EVERYONE</option>
               <option value="EVERYONE 10+">EVERYONE 10+</option>
               <option value="TEEN">TEEN</option>
-              <option value="MATURE">MATURE</option>
               <option value="ADULTS ONLY">ADULTS ONLY</option>
               <option value="RATING PENDING">RATING PENDING</option>
-              <option value="RATING PENDING-Likely Mature">RP17+</option>
-              <option value="NOT RATED">NOT RATED</option>
             </select>
           </div>
           <label htmlFor="publisher">Publisher</label>
@@ -223,18 +226,19 @@ const ApproveRequest = ({ request, onClose }) => {
           </div>
           <div className="flex">
             <button
-              className="w-full max-w-[150px] m-auto bg-green-700 hover:bg-green-500 cursor-pointer text-black text-xl font-bold text-center py-1 rounded-full mt-4"
+              className="w-full max-w-[150px] m-auto  bg-sixth hover:bg-primary cursor-pointer  text-black text-xl font-bold text-center py-1 rounded-full mt-4"
               type="submit"
             >
               Approve
             </button>
-            <button
-              className="w-full max-w-[150px] m-auto bg-sixth hover:bg-primary cursor-pointer text-black text-xl font-bold text-center py-1 rounded-full mt-4"
-              type="button"
+          </div>
+          <div className="justify-end flex mt-2">
+            <p
+              className="text-primary text-xl font-bold underline mt-2 cursor-pointer hover:text-red-500"
               onClick={onClose}
             >
               Cancel
-            </button>
+            </p>
           </div>
         </form>
       </div>

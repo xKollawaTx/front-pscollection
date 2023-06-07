@@ -60,7 +60,7 @@ const Gamedetail = () => {
     };
     fetchGameData();
     fetchUserCollection();
-  }, [gameID]);
+  }, [gameID], [userCollection]);
 
   const uniqueUsernames = [
     ...new Set(userCollection.map((user) => user.username)),
@@ -85,6 +85,7 @@ const Gamedetail = () => {
             <img
               className="px-0 md:px-52 md:mt-12 md:h-full rounded"
               src={gameData.image}
+              alt={gameData.name}
             />
           </div>
         </div>
@@ -152,7 +153,7 @@ const Gamedetail = () => {
               key={user._id}
               className="bg-tenth w-full mb-3 rounded-lg border-solid border-4 border-eleventh"
             >
-              <div className="flex px-6 h-24">
+              <div className="flex px-6 md:px-8 h-24">
                 <Link to={profileLink}>
                   <div className="mr-2 md:mr-0 mt-3 md:mt-2 w-[70px] h-[70px] md:w-20 md:h-20 overflow-hidden rounded-full cursor-pointer">
                     {user.image ? (
@@ -172,7 +173,7 @@ const Gamedetail = () => {
                 </Link>
                 <div className="ml-4 mt-2 md:mt-4">
                   <p className="text-xl font-bold">{user.username}</p>
-                  <p className="text-2sm">
+                  <p className="text-sm md:text-base">
                     {isCurrentUser
                       ? "have this game in your collection"
                       : "have this game in their collection"}

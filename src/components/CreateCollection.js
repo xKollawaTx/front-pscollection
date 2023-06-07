@@ -3,14 +3,15 @@ import { BiPlusCircle, BiEdit } from "react-icons/bi";
 import { MdOutlineDeleteForever } from "react-icons/md";
 import { toast } from "react-hot-toast";
 import { useSelector } from "react-redux";
+import {BsCheckCircle} from "react-icons/bs";
 import axios from "axios";
-
 
 const CreateCollection = ({ onClose, onCreate }) => {
   const [collectionName, setCollectionName] = useState("");
   const userData = useSelector((state) => state.user);
   const [showForm, setShowForm] = useState(false);
   const [collections, setCollections] = useState([]);
+  const [editingCollectionId, setEditingCollectionId] = useState(null);
 
   useEffect(() => {
     fetchCollections();
@@ -38,7 +39,9 @@ const CreateCollection = ({ onClose, onCreate }) => {
 
   const handleDeleteCollectionClick = (collection) => {
     axios
-      .delete(`${process.env.REACT_APP_SERVER_URL}/deletecollection/${collection._id}`)
+      .delete(
+        `${process.env.REACT_APP_SERVER_URL}/deletecollection/${collection._id}`
+      )
       .then((res) => {
         toast.success(res.data.message);
         fetchCollections();
@@ -49,25 +52,51 @@ const CreateCollection = ({ onClose, onCreate }) => {
   };
 
   const handleEditCollectionClick = (collection) => {
-    const newCollectionName = prompt("Enter new collection name", collection.name);
-    if (newCollectionName) {
-      axios
-        .put(`${process.env.REACT_APP_SERVER_URL}/updatecollection/${collection._id}`, {
-          name: newCollectionName,
-        })
-        .then((res) => {
-          toast.success(res.data.message);
-          fetchCollections();
-        })
-        .catch((err) => {
-          toast.error(err.message);
-        });
+    setEditingCollectionId(collection._id);
+    setCollectionName(collection.name);
+  };
+
+  const handleSaveCollectionClick = (collectionId) => {
+    const editedCollection = collections.find(
+      (collection) => collection._id === collectionId
+    );
+
+    if (editedCollection) {
+      if (!collectionName) {
+        toast.error("Please enter a collection name");
+        return;
+      }
+
+      if (editedCollection.name !== collectionName) {
+        axios
+          .put(
+            `${process.env.REACT_APP_SERVER_URL}/updatecollection/${collectionId}`,
+            {
+              name: collectionName,
+            }
+          )
+          .then((res) => {
+            toast.success(res.data.message);
+            fetchCollections();
+            setEditingCollectionId(null);
+          })
+          .catch((err) => {
+            toast.error(err.message);
+          });
+      } else {
+        setEditingCollectionId(null);
+      }
     }
   };
-  
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (!collectionName) {
+      toast.error("Please enter a collection name");
+      return;
+    }
+
     // Save collection to MongoDB using your backend API
     try {
       // Assuming you have an API endpoint to save the collection
@@ -113,13 +142,30 @@ const CreateCollection = ({ onClose, onCreate }) => {
               key={collection._id}
               className="flex bg-tenth rounded-xl h-[60px] text-xl font-bold border-solid border-4 border-black mb-3 cursor-pointer"
             >
-              <li className="px-4 py-3 ">{collection.name}</li>
+              {editingCollectionId === collection._id ? (
+                <input
+                  type="text"
+                  value={collectionName}
+                  onChange={handleCollectionNameChange}
+                  className="bg-fourth text-black w-[280px] border-none outline-none px-4 py-3"
+                />
+              ) : (
+                <li className="px-4 py-3 ">{collection.name}</li>
+              )}
               <div className="flex-grow"></div>
-              <BiEdit
-                size={35}
-                className="mt-2 hover:text-primary"
-                onClick={() => handleEditCollectionClick(collection)}
-              />
+              {editingCollectionId === collection._id ? (
+                <BsCheckCircle
+                  size={30}
+                  className="mt-3 hover:text-primary"
+                  onClick={() => handleSaveCollectionClick(collection._id)}
+                />
+              ) : (
+                <BiEdit
+                  size={35}
+                  className="mt-2 hover:text-primary"
+                  onClick={() => handleEditCollectionClick(collection)}
+                />
+              )}
               <MdOutlineDeleteForever
                 size={35}
                 className="mt-2 hover:text-red-500"
@@ -138,34 +184,41 @@ const CreateCollection = ({ onClose, onCreate }) => {
         <BiPlusCircle className="text-2xl mr-2" />
         <p className="text-xl">New collection</p>
       </div>
+
       {showForm && (
-        <form onSubmit={handleSubmit}>
+        <form
+          className="m-auto py-3 flex flex-col placeholder-fifth text-left"
+          onSubmit={handleSubmit}
+        >
           <label htmlFor="collectionName" className="block mb-2">
             Collection Name
           </label>
-          <input
-            type="text"
-            id="collectionName"
-            placeholder="New collection Name"
-            value={collectionName}
-            onChange={handleCollectionNameChange}
-            className="border rounded w-full py-2 px-3 mb-4 text-black"
-          />
+          <div className="w-full flex px-2 py-1 h-9 bg-fourth mt-0 mb-2 rounded focus-within:outline focus-within:outline-primary">
+            <input
+              type="text"
+              id="collectionName"
+              placeholder="New collection name"
+              value={collectionName}
+              onChange={handleCollectionNameChange}
+              className="bg-fourth text-black w-full border-none outline-none"
+            />
+          </div>
           <button
             type="submit"
-            className="bg-primary text-white py-2 px-4 rounded"
+            className="w-full max-w-[150px] m-auto  bg-sixth hover:bg-primary cursor-pointer  text-black text-xl font-bold text-center py-1 rounded-full mt-4"
           >
             Create
           </button>
         </form>
       )}
-
-      <button
-        onClick={onClose}
-        className="text-primary underline mt-2 cursor-pointer"
-      >
-        Cancel
-      </button>
+      <div className="flex justify-end">
+        <p
+          onClick={onClose}
+          className="text-primary text-xl font-bold underline mt-2 cursor-pointer hover:text-red-500"
+        >
+          Cancel
+        </p>
+      </div>
     </div>
   );
 };
