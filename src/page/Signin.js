@@ -50,7 +50,6 @@ const Signin = () => {
             })
 
             const dataRes = await fetchData.json()
-            console.log(dataRes);
 
             if (dataRes.alert === "true") {
                 toast.success(dataRes.message);
@@ -67,7 +66,7 @@ const Signin = () => {
         else {
             toast.error("Please fill all the data");
         }
-        console.log(userData);
+
     };
     return (
         <div className="p-3 md:p-4 text-white">

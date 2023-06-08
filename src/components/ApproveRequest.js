@@ -111,7 +111,7 @@ const ApproveRequest = ({ request, onClose }) => {
         }
       );
       const addGameData = await addGameResponse.json();
-      toast.success("Game added to the database");
+      toast(addGameData.message);
       onClose(); // Close the component
     } else {
       toast.error("Please fill all the fields");
@@ -208,7 +208,7 @@ const ApproveRequest = ({ request, onClose }) => {
               <option value="EVERYONE">EVERYONE</option>
               <option value="EVERYONE 10+">EVERYONE 10+</option>
               <option value="TEEN">TEEN</option>
-              <option value="ADULTS ONLY">ADULTS ONLY</option>
+              <option value="MATURE">MATURE</option>
               <option value="RATING PENDING">RATING PENDING</option>
             </select>
           </div>

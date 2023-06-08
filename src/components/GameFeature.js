@@ -6,7 +6,7 @@ const GameFeature = ({ image, name }) => {
   const dispatch = useDispatch();
 
   return (
-    <div className="w-full min-w-[150px] max-w-[250px] md:min-w-[250px] md:max-w-[320px] hover:shadow-lg drop-shadow-lg py-5 px-4 cursor-pointer flex flex-col">
+    <div className="w-full min-w-[150px] max-w-[250px] md:min-w-[250px] md:max-w-[320px] hover:shadow-lg drop-shadow-lg py-5 px-4 cursor-pointer flex flex-col transform transition-transform duration-200 ease-in-out hover:scale-105">
       <div className="h-40 sm:h-60 md:h-80 lg:h-96 overflow-hidden">
         <img
           src={image}

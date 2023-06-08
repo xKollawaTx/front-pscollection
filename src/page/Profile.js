@@ -23,7 +23,7 @@ const Profile = () => {
   const [showDeleteGamePopup, setShowDeleteGamePopup] = useState(false);
   const [selectedGames, setSelectedGames] = useState([]);
   const userData = useSelector((state) => state.user) || {};
-  console.log(userData);
+
   const handleDeleteGamePopup = () => {
     setShowDeleteGamePopup(true);
   };
@@ -32,7 +32,6 @@ const Profile = () => {
     setIsCreatingCollection(false);
   };
 
-  console.log(userData);
   useEffect(() => {
     fetchCollections();
   }, [isCreatingCollection]);
@@ -45,7 +44,6 @@ const Profile = () => {
       if (response.ok) {
         const collectionsData = await response.json();
         setCollections(collectionsData);
-        console.log(collectionsData);
 
         // Fetch game data for each collection
         const gameDataPromises = collectionsData.map(async (collection) => {
@@ -77,7 +75,6 @@ const Profile = () => {
             collectionData.games;
         });
 
-        console.log(collectionGamesObj);
         setCollectionGames(collectionGamesObj);
 
         // Set the default collection to the first collection in the array

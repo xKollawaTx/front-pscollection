@@ -75,12 +75,12 @@ const EditRequest = ({ request, onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     const { image, name, platform, genre, rating, publisher } = data;
-
+  
     if (image && name && platform && genre && rating && publisher) {
       dispatch({ type: "GET_USER_ID" });
-
+  
       const fetchData = await fetch(
         `${process.env.REACT_APP_SERVER_URL}/updaterequest/${request._id}`,
         {
@@ -91,9 +91,9 @@ const EditRequest = ({ request, onClose }) => {
           body: JSON.stringify({ ...data, userId: userData._id }),
         }
       );
-
+  
       const fetchDataRes = await fetchData.json();
-      console.log(fetchDataRes);
+      
       toast.success(fetchDataRes.message);
       onClose(); // Close the component
     } else {
@@ -192,10 +192,7 @@ const EditRequest = ({ request, onClose }) => {
               <option value="EVERYONE 10+">EVERYONE 10+</option>
               <option value="TEEN">TEEN</option>
               <option value="MATURE">MATURE</option>
-              <option value="ADULTS ONLY">ADULTS ONLY</option>
               <option value="RATING PENDING">RATING PENDING</option>
-              <option value="RATING PENDING-Likely Mature">RP17+</option>
-              <option value="NOT RATED">NOT RATED</option>
             </select>
           </div>
             <label htmlFor="publisher">Publisher</label>

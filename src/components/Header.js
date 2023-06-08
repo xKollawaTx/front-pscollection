@@ -49,9 +49,8 @@ const Header = () => {
       const searchData = resData.filter((game) =>
         game.name.toLowerCase().includes(searchText.toLowerCase())
       );
-      console.log(searchData);
 
-      // Navigate to the search result page and pass searchData as a parameter
+      
       navigate("/searchresults", { state: { searchData, searchText } });
 
       // Close the search bar

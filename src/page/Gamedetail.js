@@ -26,9 +26,6 @@ const Gamedetail = () => {
     }
   };
 
-  console.log(gameID);
-  console.log(gameData);
-
   useEffect(() => {
     const fetchGameData = async () => {
       try {
@@ -40,7 +37,7 @@ const Gamedetail = () => {
           setGameData(data);
         }
       } catch (error) {
-        console.log(error);
+        toast.error("Something went wrong!");
       }
     };
 
@@ -55,7 +52,7 @@ const Gamedetail = () => {
         const mappedDataUser = data.map((item) => item.user);
         setUserCollection(mappedDataUser);
       } catch (error) {
-        console.log(error);
+        toast.error("Something went wrong!");
       }
     };
     fetchGameData();
@@ -65,8 +62,6 @@ const Gamedetail = () => {
   const uniqueUsernames = [
     ...new Set(userCollection.map((user) => user.username)),
   ];
-  console.log(uniqueUsernames);
-  console.log(userCollection);
 
   function formatDate(dateString) {
     const date = new Date(dateString);

@@ -11,22 +11,24 @@ import Select from "react-select";
 import makeAnimated from "react-select/animated";
 
 export const Ps4 = () => {
-  const dispatch = useDispatch()
-  const fetchGameData = useSelector((state)=>state.game)
-  
-  useEffect(()=>{
-    (async()=>{
-      const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/game`)
-      const resData = await res.json()
-      dispatch(setDataGame(resData))
-    })()
-  },[])
-  console.log(fetchGameData)
+  const userData = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const fetchGameData = useSelector((state) => state.game);
+
+  useEffect(() => {
+    (async () => {
+      const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/game`);
+      const resData = await res.json();
+      dispatch(setDataGame(resData));
+    })();
+  }, []);
+
   const gameData = useSelector((state) => state.game.gameList);
   const ps4GameList = gameData.filter((game) => game.platform === "ps4");
   ps4GameList.sort((a, b) => {
     return new Date(b.dateAdded) - new Date(a.dateAdded);
   });
+
   const [showFilter, setShowFilter] = useState(false); // State to track filter visibility
   const [selectedPlatform, setSelectedPlatform] = useState("any");
   const [selectedSortBy, setSelectedSortBy] = useState("");
@@ -49,7 +51,6 @@ export const Ps4 = () => {
     { value: "Sports", label: "Sports" },
     { value: "Strategy", label: "Strategy" },
   ];
-  
 
   const handleFilterClick = () => {
     setShowFilter(!showFilter);
@@ -71,22 +72,22 @@ export const Ps4 = () => {
     setSelectedRating(e.target.value);
   };
 
-  const filteredData = ps4GameList.filter((game) => {
+  let filteredData = ps4GameList.filter((game) => {
     const platformMatch =
       selectedPlatform === "any" || game.platform === selectedPlatform;
-  
+
     const genreMatch =
       selectedGenre.length === 0 ||
       selectedGenre.some((option) => option.value === "any") ||
       selectedGenre.some((option) => game.genre.includes(option.value));
-  
-    const ratingMatch = selectedRating === "" || game.rating === selectedRating;
-  
+
+    const ratingMatch =
+      selectedRating === "" || game.rating === selectedRating;
+
     return platformMatch && genreMatch && ratingMatch;
   });
-  
 
-  const sortedData = filteredData.sort((a, b) => {
+  let sortedData = filteredData.sort((a, b) => {
     if (selectedSortBy === "name-asc") {
       return a.name.localeCompare(b.name);
     } else if (selectedSortBy === "name-desc") {
@@ -99,19 +100,22 @@ export const Ps4 = () => {
     return 0;
   });
 
+  if (!userData._id) {
+    sortedData = sortedData.slice(0, 15);
+  }
+
   return (
     <div className="p-2 md:p-4 text-white">
       <div className="px-5 py-5 md:px-20 flex justify-between items-center">
         <p className="text-2xl md:text-2xl font-bold">
           PS4 Games<br></br>
         </p>
-        <BiFilter size={50} className="" onClick={handleFilterClick}/>
+        <BiFilter size={50} className="" onClick={handleFilterClick} />
       </div>
       {showFilter && (
         <div className="p-5 md:p-10 bg-eighth">
           <h2 className="text-lg font-bold mb-3">Filter Options</h2>
-          <div className="mb-3">
-          </div>
+          <div className="mb-3"></div>
           <div className="mb-3">
             <label className="block mb-1 font-bold">Sort By:</label>
             <select
@@ -127,7 +131,7 @@ export const Ps4 = () => {
             </select>
           </div>
           <div className="mb-3">
-          <label className="block mb-1 font-bold ">Genre:</label>
+            <label className="block mb-1 font-bold ">Genre:</label>
             <Select
               className="w-full p-2 border bg-fourth text-black border-third rounded-md"
               closeMenuOnSelect={false}
@@ -158,7 +162,7 @@ export const Ps4 = () => {
               <option value="EVERYONE">EVERYONE</option>
               <option value="EVERYONE 10+">EVERYONE 10+</option>
               <option value="TEEN">TEEN</option>
-              <option value="ADULTS ONLY">ADULTS ONLY</option>
+              <option value="MATURE">MATURE</option>
               <option value="RATING PENDING">RATING PENDING</option>
             </select>
           </div>

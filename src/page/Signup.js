@@ -19,7 +19,6 @@ const Signup = () => {
         image: defaultImageBase64,
     });
 
-    console.log(data);
 
     const handleShowPassword = () => {
         setShowPassword((preve) => !preve);
@@ -70,7 +69,6 @@ const Signup = () => {
                 })
 
                 const dataRes = await fetchData.json()
-                console.log(dataRes);
                 // alert(dataRes.message);
                 if (dataRes.alert === "true") {
                     toast.success(dataRes.message);

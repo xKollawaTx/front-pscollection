@@ -46,17 +46,17 @@ const DeleteGame = () => {
     // Find the game by ID
     const gameToEdit = gameeditedGame.find((game) => game._id === gameId);
 
-    // Set the selected game and open the edit modal
+    
     setSelectedGame(gameToEdit);
-    setEditedGame({ ...gameToEdit }); // Copy the selected game to editedGame state
-    setSelectedGenres(gameToEdit.genre); // Set selected genres
-    setEditModalOpen(true); // Add this line to open the edit modal
-    console.log("Edit game:", gameId);
+    setEditedGame({ ...gameToEdit }); 
+    setSelectedGenres(gameToEdit.genre); 
+    setEditModalOpen(true); 
+    
   };
 
   const handleDelete = (event, gameId) => {
     event.preventDefault();
-  
+
     // Delete the game from the "game" collection
     axios
       .delete(`${process.env.REACT_APP_SERVER_URL}/deletegame/${gameId}`)
@@ -65,10 +65,12 @@ const DeleteGame = () => {
         setSearchResults((prevResults) =>
           prevResults.filter((game) => game._id !== gameId)
         );
-  
+
         // Delete the game ID from all collections that have it in their "gameIds" array
         axios
-          .put(`${process.env.REACT_APP_SERVER_URL}/collection/deletegame/${gameId}`)
+          .put(
+            `${process.env.REACT_APP_SERVER_URL}/collection/deletegame/${gameId}`
+          )
           .then((res) => {
             // toast.success('Game deleted from collections');
             handleSearch();
@@ -83,17 +85,19 @@ const DeleteGame = () => {
         toast.error("Failed to delete game");
       });
   };
-  
 
   const handleSave = (event) => {
     event.preventDefault();
-    
+
     // Update the genres of the edited game
     const updatedGame = { ...editedGame, genre: selectedGenres };
-    
+
     // Perform the logic to save the edited game
     axios
-      .put(`${process.env.REACT_APP_SERVER_URL}/editgame/${updatedGame._id}`, updatedGame)
+      .put(
+        `${process.env.REACT_APP_SERVER_URL}/editgame/${updatedGame._id}`,
+        updatedGame
+      )
       .then((res) => {
         toast.success(res.data.message);
         setEditModalOpen(false); // Close the edit modal
@@ -103,7 +107,6 @@ const DeleteGame = () => {
         console.log(err);
       });
   };
-  
 
   useEffect(() => {
     (async () => {
@@ -282,7 +285,7 @@ const DeleteGame = () => {
                       <option value="EVERYONE">EVERYONE</option>
                       <option value="EVERYONE 10+">EVERYONE 10+</option>
                       <option value="TEEN">TEEN</option>
-                      <option value="ADULTS ONLY">ADULTS ONLY</option>
+                      <option value="MATURE">MATURE</option>
                       <option value="RATING PENDING">RATING PENDING</option>
                     </select>
                   </div>

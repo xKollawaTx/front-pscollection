@@ -11,6 +11,7 @@ import Select from "react-select";
 import makeAnimated from "react-select/animated";
 
 export const Whatsnew = () => {
+  const userData = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const fetchGameData = useSelector((state) => state.game);
 
@@ -24,13 +25,12 @@ export const Whatsnew = () => {
 
   const gameData = useSelector((state) => state.game.gameList);
 
-  // Create a new array and sort it by dateAdded
+  
   const newGameList = [...gameData].sort((a, b) => {
     return new Date(b.dateAdded) - new Date(a.dateAdded);
   });
 
-  console.log(newGameList);
-  const [showFilter, setShowFilter] = useState(false); // State to track filter visibility
+  const [showFilter, setShowFilter] = useState(false); 
   const [selectedPlatform, setSelectedPlatform] = useState("any");
   const [selectedSortBy, setSelectedSortBy] = useState("");
   const [selectedGenre, setSelectedGenre] = useState([]);
@@ -38,7 +38,7 @@ export const Whatsnew = () => {
   const animatedComponents = makeAnimated();
 
   const options = [
-    { value: "any", label: "Any" }, // Add "Any" option
+    { value: "any", label: "Any" }, 
     { value: "Action", label: "Action" },
     { value: "Adventure", label: "Adventure" },
     { value: "Family", label: "Family" },
@@ -87,7 +87,7 @@ export const Whatsnew = () => {
     return platformMatch && genreMatch && ratingMatch;
   });
 
-  const sortedData = filteredData.sort((a, b) => {
+  let sortedData = filteredData.sort((a, b) => {
     if (selectedSortBy === "name-asc") {
       return a.name.localeCompare(b.name);
     } else if (selectedSortBy === "name-desc") {
@@ -99,6 +99,12 @@ export const Whatsnew = () => {
     }
     return 0;
   });
+
+  
+  if (!userData._id) {
+    sortedData = sortedData.slice(0, 15);
+  }
+
   return (
     <div className="p-2 md:p-4 text-white">
       <div className="px-5 py-5 md:px-20 flex justify-between items-center">
@@ -168,7 +174,7 @@ export const Whatsnew = () => {
               <option value="EVERYONE">EVERYONE</option>
               <option value="EVERYONE 10+">EVERYONE 10+</option>
               <option value="TEEN">TEEN</option>
-              <option value="ADULTS ONLY">ADULTS ONLY</option>
+              <option value="MATURE">MATURE</option>
               <option value="RATING PENDING">RATING PENDING</option>
             </select>
           </div>
@@ -186,4 +192,5 @@ export const Whatsnew = () => {
     </div>
   );
 };
+
 export default Whatsnew;

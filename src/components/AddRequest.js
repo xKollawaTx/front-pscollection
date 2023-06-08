@@ -25,7 +25,7 @@ const AddRequest = ({ onClose }) => {
   ];
 
   const userData = useSelector((state) => state.user);
-  console.log(userData._id);
+  
   const [data, setData] = useState({
     user: userData._id,
     image: "",
@@ -63,12 +63,17 @@ const AddRequest = ({ onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     const { image, name, platform, genre, rating, publisher } = data;
-
-    if (image && name && platform && genre.length > 0 && rating && publisher) {
+  
+    if (!name) {
+      toast.error("Please enter a game name");
+      return;
+    }
+  
+    if (image && platform && genre.length > 0 && rating && publisher) {
       dispatch({ type: "GET_USER_ID" });
-
+  
       const fetchData = await fetch(
         `${process.env.REACT_APP_SERVER_URL}/createrequest`,
         {
@@ -79,9 +84,9 @@ const AddRequest = ({ onClose }) => {
           body: JSON.stringify({ ...data, userId: userData._id }),
         }
       );
-
+  
       const fetchDataRes = await fetchData.json();
-      console.log(fetchDataRes);
+      
       toast.success(fetchDataRes.message);
       setData({
         user: userData._id,
@@ -94,10 +99,9 @@ const AddRequest = ({ onClose }) => {
         state: "wait for approval",
       });
       onClose(); // Close the component
-    } else {
-      toast.error("Please fill all the fields");
-    }
+    } 
   };
+  
 
   return (
     <div className="p-4 text-white max-w-[400px] m-auto bg-eighth border-solid border-2 border-black">
@@ -195,7 +199,7 @@ const AddRequest = ({ onClose }) => {
               <option value="EVERYONE">EVERYONE</option>
               <option value="EVERYONE 10+">EVERYONE 10+</option>
               <option value="TEEN">TEEN</option>
-              <option value="ADULTS ONLY">ADULTS ONLY</option>
+              <option value="MATURE">MATURE</option>
               <option value="RATING PENDING">RATING PENDING</option>
             </select>
           </div>

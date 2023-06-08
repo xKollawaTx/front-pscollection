@@ -11,6 +11,7 @@ import Select from "react-select";
 import makeAnimated from "react-select/animated";
 
 export const Ps5 = () => {
+  const userData = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const fetchGameData = useSelector((state) => state.game);
 
@@ -21,7 +22,7 @@ export const Ps5 = () => {
       dispatch(setDataGame(resData));
     })();
   }, []);
-  console.log(fetchGameData);
+
   const gameData = useSelector((state) => state.game.gameList);
   const ps5GameList = gameData.filter((game) => game.platform === "ps5");
   ps5GameList.sort((a, b) => {
@@ -86,7 +87,7 @@ export const Ps5 = () => {
   });
   
 
-  const sortedData = filteredData.sort((a, b) => {
+  let sortedData = filteredData.sort((a, b) => {
     if (selectedSortBy === "name-asc") {
       return a.name.localeCompare(b.name);
     } else if (selectedSortBy === "name-desc") {
@@ -98,6 +99,10 @@ export const Ps5 = () => {
     }
     return 0;
   });
+
+  if (!userData._id) {
+    sortedData = sortedData.slice(0, 15);
+  }
 
   return (
     <div className="p-2 md:p-4 text-white">
@@ -158,7 +163,7 @@ export const Ps5 = () => {
               <option value="EVERYONE">EVERYONE</option>
               <option value="EVERYONE 10+">EVERYONE 10+</option>
               <option value="TEEN">TEEN</option>
-              <option value="ADULTS ONLY">ADULTS ONLY</option>
+              <option value="MATURE">MATURE</option>
               <option value="RATING PENDING">RATING PENDING</option>
             </select>
           </div>

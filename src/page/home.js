@@ -24,10 +24,10 @@ export const Home = () => {
   const newGameList = [...gameData].sort((a, b) => {
     return new Date(b.dateAdded) - new Date(a.dateAdded);
   });
-  newGameList.length = 10;
+  newGameList.length = 15;
 
   const ps5gameList = gameData.filter((game) => game.platform === "ps5");
-  ps5gameList.length = 10;
+  ps5gameList.length = 15;
   
   ps5gameList.sort((a, b) => {
     return new Date(b.dateAdded) - new Date(a.dateAdded);
@@ -38,7 +38,7 @@ export const Home = () => {
   ps4gameList.sort((a, b) => {
     return new Date(b.dateAdded) - new Date(a.dateAdded);
   });
-  ps4gameList.length = 10;
+  ps4gameList.length = 15;
   const swiperRef = useRef(null);
 
   useEffect(() => {

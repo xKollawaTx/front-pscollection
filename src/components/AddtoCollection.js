@@ -11,7 +11,6 @@ const AddtoCollection = ({ onClose, onCreate }) => {
   const [collections, setCollections] = useState([]);
   const { id: gameID } = useParams();
 
-  console.log(gameID);
 
   useEffect(() => {
     fetchCollections();
@@ -82,7 +81,7 @@ const AddtoCollection = ({ onClose, onCreate }) => {
         }
       );
       const datares = await response.json();
-      console.log(datares);
+      
       if (datares.alert === "true") {
         toast.success(datares.message);
       } else {

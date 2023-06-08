@@ -81,7 +81,6 @@ const Addgame = () => {
 
       const fetchDataRes = await fetchData.json();
 
-      console.log(fetchDataRes);
       toast(fetchDataRes.message);
 
       setData({
